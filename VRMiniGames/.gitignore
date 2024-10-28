@@ -28,7 +28,7 @@
 .vsconfig
 
 # IntelliJ
-.idea/
+../idea
 
 # Gradle cache directory
 .gradle/
