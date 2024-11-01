@@ -17,3 +17,4 @@ Oculus/Platform.meta filter=lfs diff=lfs merge=lfs -text
 Oculus/SampleFramework filter=lfs diff=lfs merge=lfs -text
 Oculus/SampleFramework.meta filter=lfs diff=lfs merge=lfs -text
 DenysAlmaral/* filter=lfs diff=lfs merge=lfs -text
+CartoonTracksPack1/* filter=lfs diff=lfs merge=lfs -text
