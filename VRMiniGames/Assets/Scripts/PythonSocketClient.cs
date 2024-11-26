@@ -34,6 +34,7 @@ public class PythonSocketClient : MonoBehaviour
     private bool _initialized = false;
 
     //이벤트 핸들러
+    public static event Action<ModelInputData> OnDataSended;
     public static event Action<ModelOutputData> OnDataReceived;
 
     //tcp socket 관련 변수
@@ -88,22 +89,30 @@ public class PythonSocketClient : MonoBehaviour
     private void SendData()
     {
         //VR 좌표 데이터
-        var vr_pos_data = new
+        //var vr_pos_data = new
+        //{
+        float[] hmd_pos = ConvertVec3ToArray(hmd.transform.position);
+        float[] left_hand_pos = ConvertVec3ToArray(left_controller.transform.localPosition);
+        float[] right_hand_pos = ConvertVec3ToArray(right_controller.transform.localPosition);
+        //};
+        float[][] vr_pos_data  = new float[][]
         {
-            hmd_pos = ConvertVec3ToArray(hmd.transform.position),
-            left_hand_pos = ConvertVec3ToArray(left_controller.transform.position),
-            right_hand_pos = ConvertVec3ToArray(right_controller.transform.position)
+            hmd_pos,
+            left_hand_pos,
+            right_hand_pos
         };
 
-        var tmp_pos_data = new
+        var dummy_pos_data = new
         {
             hmd_pos = ConvertVec3ToArray(new Vector3(0.0f, 1.7f, 0.0f)),
             left_hand_pos = ConvertVec3ToArray(new Vector3(-0.5f, 1.5f, 0.2f)),
             right_hand_pos = ConvertVec3ToArray(new Vector3(0.5f, 1.5f, 0.2f)),
         };
 
+        //Debug.Log($"VR 머리 위치:{hmd_pos.ToString()}");
         //VR 좌표 데이터 송신
         string json_vr_pos_data = JsonConvert.SerializeObject(vr_pos_data);
+        json_vr_pos_data += "\n";
         byte[] byte_vr_pos_data = Encoding.UTF8.GetBytes(json_vr_pos_data);
         stream.Write(byte_vr_pos_data, 0, byte_vr_pos_data.Length);
 
@@ -121,6 +130,8 @@ public class PythonSocketClient : MonoBehaviour
             string json_model_output_data = Encoding.UTF8.GetString(model_output_buffer, 0, byte_model_output_data);
 
             var model_output_data = JsonConvert.DeserializeObject<ModelOutputData>(json_model_output_data);
+
+            //Debug.Log($"python 머리 위치{ model_output_data.GetKeypoints()[0]}");
             OnDataReceived?.Invoke(model_output_data);
         }
     }
@@ -138,6 +149,11 @@ public class PythonSocketClient : MonoBehaviour
     }
 }
 
+public class ModelInputData
+{
+    public float[][] keypoints;
+}
+
 
 [Serializable]
 public class ModelOutputData
@@ -153,4 +169,16 @@ public class ModelOutputData
 
         return vectors;
     }
+
+//    ACTIVITY_LIST = [
+//    "Squat", 0
+//    "Lunge", 1
+//    "Jump", 2
+//    "Stepper", 3
+//    "Walking",  4# walking should be in front of other walking variants
+//    "InPlaceWalking", 5
+//    "SideWalking", 6
+//    "BackwardWalking", 7
+//]
+    public int GetAction() {  return action_class; }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 [System.Serializable]
 public class VRMap
@@ -36,22 +37,7 @@ public class PoseMap
 public class PoseMapping : MonoBehaviour
 {
     /*
-     KEYPOINTS = [
-    'nose', #0
-    'left_shoulder', #1
-    'right_shoulder', #2
-    'left_elbow', #3
-    'right_elbow',#4
-    'left_wrist',#5
-    'right_wrist',#6
-    'left_hip_extra',#7
-    'right_hip_extra',#8
-    'left_knee',#9
-    'right_knee',#10
-    'left_ankle',#11
-    'right_ankle',#12
-    'left_bigtoe',#13
-    'right_bigtoe',#14
+
 ]*/
     private Vector3[] python_model_keypoints;
 
@@ -60,7 +46,8 @@ public class PoseMapping : MonoBehaviour
 
 
     [Range(0, 1)]
-    public float turn_smoothness = 0.1f;
+    public float turn_smoothness = 0.1f; 
+    public float move_smoothness = 0.1f;
 
     public Vector3 head_body_pos_offset;
     public float head_body_yaw_offset;
@@ -82,6 +69,15 @@ public class PoseMapping : MonoBehaviour
     public PoseMap right_toe;
 
 
+    private bool is_calibrate_done = false;
+    private Vector3 accumulatedVRPosition; // VR 기기의 누적 위치
+    private Vector3 accumulatedCenterPosition;
+    private int sampleCount; // 수집된 샘플의 개수
+
+    private Vector3 initialCharacterPosition; // 캐릭터 초기 위치
+    private Vector3 initialVRPosition; // VR 초기 위치
+
+
     public Animator animator;
 
 
@@ -101,8 +97,48 @@ public class PoseMapping : MonoBehaviour
             left_toe, right_toe
         };
 
-    }
+        StartCoroutine(StartCalibration(2.0f));
 
+    }
+    IEnumerator StartCalibration(float duration)
+    {
+        accumulatedVRPosition = Vector3.zero;
+        sampleCount = 0;
+
+        Debug.Log("Calibration started...");
+
+        // Calibration 동안 VR 기기의 위치를 누적
+        float elapsedTime = 0.0f;
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+
+            // VR 기기의 위치 누적
+            accumulatedVRPosition += head.vr_target.position;
+            accumulatedCenterPosition += (head.vr_target.position + left_hand.vr_target.position + right_hand.vr_target.position) / 3.0f;
+            sampleCount++;
+
+            // 매 프레임 실행
+            yield return null;
+        }
+
+        // Calibration 종료 처리
+        CompleteCalibration();
+    }
+    void CompleteCalibration()
+    {
+        // VR 초기 위치를 평균값으로 설정
+        initialVRPosition = accumulatedVRPosition / sampleCount;
+        initialCharacterPosition = accumulatedCenterPosition / sampleCount;
+        initialCharacterPosition.y = 0f;
+
+        transform.position = initialCharacterPosition;
+        is_calibrate_done = true;
+
+        Debug.Log("Calibration completed.");
+        Debug.Log($"Initial VR Position: {initialVRPosition}");
+        Debug.Log($"Initial Character Position: {initialCharacterPosition}");
+    }
     private void OnEnable()
     {
         PythonSocketClient.OnDataReceived += UpdatePythonKeypoints;
@@ -134,8 +170,13 @@ public class PoseMapping : MonoBehaviour
 
     private void LateUpdate()
     {
-        ApplyPythonKeypoints();
         UpdateVRKeypoints();
+        if (is_calibrate_done)
+        {
+            ApplyPythonKeypoints();
+            //UpdateVRKeypoints();
+            UpdateBodyTransform();
+        }
     }
 
     private void ApplyPythonKeypoints()
@@ -167,13 +208,35 @@ public class PoseMapping : MonoBehaviour
 
     void UpdateVRKeypoints()
     {
-        transform.position = head.ik_target.position + head_body_pos_offset;
-        float yaw = head.vr_target.eulerAngles.y;
-        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.eulerAngles.x, yaw, transform.eulerAngles.z), turn_smoothness);
-
         head.Map();
         left_hand.Map();
         right_hand.Map();
     }
+
+    void UpdateBodyTransform()
+    {
+        Vector3 character_center = (python_model_keypoints[2] + python_model_keypoints[3]) / 2.0f;
+        character_center.y = 0f;
+
+        Vector3 vr_move_offset = head.vr_target.position - initialVRPosition;
+        vr_move_offset.y = 0f;
+        Vector3 final_body_pos = initialCharacterPosition + vr_move_offset + character_center;
+
+
+        //transform.position = Vector3.Lerp(transform.position, final_body_pos, Time.deltaTime * move_smoothness);
+        transform.position = final_body_pos;
+
+        float yaw = head.vr_target.eulerAngles.y;
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.eulerAngles.x, yaw, transform.eulerAngles.z), turn_smoothness);
+    }
+
+    void CalibratePose()
+    {
+        Vector3 center = (head.vr_target.position + left_hand.vr_target.position + right_hand.vr_target.position) / 3.0f;
+        center.y = 0f;
+
+        transform.position = center;
+    }
+
 
 }

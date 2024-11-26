@@ -7,17 +7,20 @@ public class InputManager : MonoBehaviour
 {
     public float speed = 1.0f;
 
-    private Rigidbody myRigid;
+    private int cur_action;
+    public Transform hmd_transform;
 
 
-    // Start is called before the first frame update
-    void Start()
+
+    private void OnEnable()
     {
-        myRigid = GetComponent<Rigidbody>();
+        PythonSocketClient.OnDataReceived += UpdatePythonAction;
     }
 
-    // 이벤트 리스트에 등록 및 해제
-
+    private void OnDisable()
+    {
+        PythonSocketClient.OnDataReceived -= UpdatePythonAction;
+    }
 
     // Update is called once per frame
     void Update()
@@ -25,35 +28,42 @@ public class InputManager : MonoBehaviour
         Move();
     }
     
+
+
     void Move()
     {
-        //float _move_dir_X = Input.GetAxisRaw("Horizontal");
-        //float _move_dir_Z = Input.GetAxisRaw("Vertical");
-
-        //Vector3 _move_horizontal = transform.right * _move_dir_X;
-        //Vector3 _move_vertical = transform.forward * _move_dir_Z;
-
-        //Vector3 _velocity = (_move_horizontal + _move_vertical).normalized * speed;
-
-        //myRigid.MovePosition(transform.position + _velocity * Time.deltaTime);
-
-        if (Input.GetKey(KeyCode.A))
+        if (cur_action == 4 || cur_action == 5)
         {
-            transform.Translate(-speed * Time.deltaTime, 0, 0);
+            Vector3 hmd_front = hmd_transform.forward;
+            hmd_front.y = 0f;
+            transform.position += hmd_front * speed * Time.deltaTime;
         }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            transform.Translate(speed * Time.deltaTime, 0, 0);
-        }
-        else if (Input.GetKey(KeyCode.W))
-        {
-            transform.Translate(0, 0, speed * Time.deltaTime);
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            transform.Translate(0, 0, -speed * Time.deltaTime);
-        }
-        
+        //if (Input.GetKey(KeyCode.A))
+        //{
+        //    transform.Translate(-speed * Time.deltaTime, 0, 0);
+        //}
+        //else if (Input.GetKey(KeyCode.D))
+        //{
+        //    transform.Translate(speed * Time.deltaTime, 0, 0);
+        //}
+        //else if (Input.GetKey(KeyCode.W))
+        //{
+        //    transform.Translate(0, 0, speed * Time.deltaTime);
+        //}
+        //else if (Input.GetKey(KeyCode.S))
+        //{
+        //    transform.Translate(0, 0, -speed * Time.deltaTime);
+        //}
+    }
+
+    public void SetSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+
+    void UpdatePythonAction(ModelOutputData data)
+    { 
+        cur_action = data.GetAction();
     }
 
 }
