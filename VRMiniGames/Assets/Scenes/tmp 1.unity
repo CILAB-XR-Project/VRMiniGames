@@ -246,6 +246,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1
   hmd_transform: {fileID: 562739816}
+  character: {fileID: 4097831381854484610}
 --- !u!1 &1010466158
 GameObject:
   m_ObjectHideFlags: 0
@@ -563,15 +564,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.0000006819609
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.4645004
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.08490772
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -771,6 +772,11 @@ Transform:
   - {fileID: 1010466159}
   m_Father: {fileID: 189613715}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4097831381854484610 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2628582724561591846, guid: 19b2a1f08606921448cef0ea5879572c, type: 3}
+  m_PrefabInstance: {fileID: 8031063679929409208}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8031063679929409208
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -789,7 +795,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2628582724561591846, guid: 19b2a1f08606921448cef0ea5879572c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.07
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2628582724561591846, guid: 19b2a1f08606921448cef0ea5879572c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -844,8 +850,8 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1709061430}
   - {fileID: 108326731}
   - {fileID: 1358582190}
   - {fileID: 1877796626}
+  - {fileID: 1709061430}
   - {fileID: 8031063679929409208}

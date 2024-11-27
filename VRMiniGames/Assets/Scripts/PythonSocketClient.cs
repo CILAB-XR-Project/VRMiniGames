@@ -34,7 +34,6 @@ public class PythonSocketClient : MonoBehaviour
     private bool _initialized = false;
 
     //이벤트 핸들러
-    public static event Action<ModelInputData> OnDataSended;
     public static event Action<ModelOutputData> OnDataReceived;
 
     //tcp socket 관련 변수
@@ -42,10 +41,8 @@ public class PythonSocketClient : MonoBehaviour
     NetworkStream stream;
 
 
-    // 좌표를 받아오기 위한 오브젝트 들
-    public GameObject hmd;
-    public GameObject left_controller;
-    public GameObject right_controller;
+    // 좌표를 받아오기 위한 오브젝
+    public PoseMapping character_pose;
 
     void Awake()
     {
@@ -80,6 +77,7 @@ public class PythonSocketClient : MonoBehaviour
         InvokeRepeating("ReceiveData", 0.0666f, 0.0666f);
     }
 
+    //Vec3[] to float[][]
     private float[] ConvertVec3ToArray(Vector3 pos_vec3)
     {
         return new float[] { pos_vec3.x, pos_vec3.y, pos_vec3.z };
@@ -88,20 +86,9 @@ public class PythonSocketClient : MonoBehaviour
     //데이터 송신 함수
     private void SendData()
     {
-        //VR 좌표 데이터
-        //var vr_pos_data = new
-        //{
-        float[] hmd_pos = ConvertVec3ToArray(hmd.transform.position);
-        float[] left_hand_pos = ConvertVec3ToArray(left_controller.transform.localPosition);
-        float[] right_hand_pos = ConvertVec3ToArray(right_controller.transform.localPosition);
-        //};
-        float[][] vr_pos_data  = new float[][]
-        {
-            hmd_pos,
-            left_hand_pos,
-            right_hand_pos
-        };
-
+        //VR 좌표 데이터 받아오기
+        float[][] vr_pos_data = character_pose.GetVRPosition();
+        
         var dummy_pos_data = new
         {
             hmd_pos = ConvertVec3ToArray(new Vector3(0.0f, 1.7f, 0.0f)),
@@ -132,6 +119,8 @@ public class PythonSocketClient : MonoBehaviour
             var model_output_data = JsonConvert.DeserializeObject<ModelOutputData>(json_model_output_data);
 
             //Debug.Log($"python 머리 위치{ model_output_data.GetKeypoints()[0]}");
+
+            //이벤트 발생
             OnDataReceived?.Invoke(model_output_data);
         }
     }
@@ -149,11 +138,6 @@ public class PythonSocketClient : MonoBehaviour
     }
 }
 
-public class ModelInputData
-{
-    public float[][] keypoints;
-}
-
 
 [Serializable]
 public class ModelOutputData
@@ -161,6 +145,7 @@ public class ModelOutputData
     public float[][] keypoints; //19개의 kps 3d좌표
     public int action_class; //현재 action class
 
+    // 키포인트 vec3로 변환 하여 리턴
     public Vector3[] GetKeypoints()
     {
         Vector3[] vectors = new Vector3[keypoints.Length];
@@ -175,10 +160,12 @@ public class ModelOutputData
 //    "Lunge", 1
 //    "Jump", 2
 //    "Stepper", 3
-//    "Walking",  4# walking should be in front of other walking variants
+//    "Walking", 4
 //    "InPlaceWalking", 5
 //    "SideWalking", 6
 //    "BackwardWalking", 7
 //]
+
+    //action idx 반환(의미는 위 리스트 참조)
     public int GetAction() {  return action_class; }
 }

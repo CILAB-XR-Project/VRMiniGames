@@ -9,6 +9,7 @@ public class InputManager : MonoBehaviour
 
     private int cur_action;
     public Transform hmd_transform;
+    public Transform character;
 
 
 
@@ -27,8 +28,14 @@ public class InputManager : MonoBehaviour
     {
         Move();
     }
-    
 
+
+    private void Start()
+    {
+        Vector3 character_pos = character.position;
+        character_pos.y = 1.5f;
+        transform.position = character_pos;
+    }
 
     void Move()
     {

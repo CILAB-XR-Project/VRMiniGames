@@ -33,6 +33,24 @@ public class PoseMap
 }
 
 
+/*
+1. T-pose calibration(done)
+ - t-pose를 수행하여 최초 캐릭터, VR 중심 좌표 저장 
+ - 캐릭터 중심 좌표로 이동(transform)
+2. 캐릭터 중심을 기준으로 VR에서 얻은 머리, 손 좌표 normailze (done)
+    - transform 기준으로 머리, 손 normalize
+    - 이거는 어디서 수행? pose mapping에서 함수 만들고 불러오는 식으로
+3. 센서에서 얻은 압력데이터+normalized 머리, 손 좌표를 사용한 전신 키포인트 추론 (함수 형태만 만들어 놓음. 실제 tactile 연동 코드 작성 필요)
+    -normalize 좌표를 파이썬 모델에 전달하여 10개의 키포인트 추론
+4. 현재 골반 기준으로 전신 키포인트 캐릭터에 적용 (done)
+    - 현재 캐릭터를 기준으로 localPosition에 키포인트 적용
+5. VR의 위치 이동량+모델에서 추론한 골반 좌표로 캐릭터 좌표 중심 최신화 (done?)
+    - VR의 위치 이동량 + 모델에서 추론한 골반 좌표를 사용해 캐릭터 중심 좌표 업데이트
+    - VR의 위치 이동은 다른 곳에서 수행하여도 
+6. 2~5 반복.
+
+ */
+
 
 public class PoseMapping : MonoBehaviour
 {
@@ -52,11 +70,13 @@ public class PoseMapping : MonoBehaviour
     public Vector3 head_body_pos_offset;
     public float head_body_yaw_offset;
 
-
+    //VR keypoints mapping
     public VRMap head;
     public VRMap left_hand;
     public VRMap right_hand;
 
+
+    //Tactile keypoints mapping
     public PoseMap left_shoulder;
     public PoseMap right_shoulder;
     public PoseMap left_hip;
@@ -68,18 +88,13 @@ public class PoseMapping : MonoBehaviour
     public PoseMap left_toe;
     public PoseMap right_toe;
 
-
+    //Calibration vars
     private bool is_calibrate_done = false;
     private Vector3 accumulatedVRPosition; // VR 기기의 누적 위치
     private Vector3 accumulatedCenterPosition;
-    private int sampleCount; // 수집된 샘플의 개수
-
     private Vector3 initialCharacterPosition; // 캐릭터 초기 위치
     private Vector3 initialVRPosition; // VR 초기 위치
-
-
-    public Animator animator;
-
+    private int sampleCount; // 수집된 샘플의 개수
 
     private void Start()
     {
@@ -87,19 +102,30 @@ public class PoseMapping : MonoBehaviour
         python_model_keypoints = new Vector3[10];
 
         pose_maps = new PoseMap[10] {
-            //nose,
             left_shoulder, right_shoulder,
-            //left_elbow, right_elbow,
-            //left_wrist, right_wrist,
             left_hip, right_hip,
             left_knee, right_knee,
             left_ankle, right_ankle,
             left_toe, right_toe
         };
 
+        //캐릭터 중심 및 시작 좌표 계산용 캘리브레이션
+        //씬 바뀔때마다...? 특정 위치에서 매번 시작할거면 상관 없을 수도
         StartCoroutine(StartCalibration(2.0f));
 
     }
+    private void LateUpdate()
+    {
+        UpdateVRKeypoints();
+        if (is_calibrate_done)
+        {
+            ApplyPythonKeypoints();
+            //UpdateVRKeypoints();
+            UpdateBodyTransform();
+        }
+    }
+
+    //calibration 수행
     IEnumerator StartCalibration(float duration)
     {
         accumulatedVRPosition = Vector3.zero;
@@ -115,6 +141,7 @@ public class PoseMapping : MonoBehaviour
 
             // VR 기기의 위치 누적
             accumulatedVRPosition += head.vr_target.position;
+            //머리, 양손의 중심을 캐릭터의 중심으로 계산
             accumulatedCenterPosition += (head.vr_target.position + left_hand.vr_target.position + right_hand.vr_target.position) / 3.0f;
             sampleCount++;
 
@@ -125,10 +152,13 @@ public class PoseMapping : MonoBehaviour
         // Calibration 종료 처리
         CompleteCalibration();
     }
+
     void CompleteCalibration()
     {
         // VR 초기 위치를 평균값으로 설정
         initialVRPosition = accumulatedVRPosition / sampleCount;
+
+        //캐릭터 최초 중심 위치 저장
         initialCharacterPosition = accumulatedCenterPosition / sampleCount;
         initialCharacterPosition.y = 0f;
 
@@ -139,6 +169,8 @@ public class PoseMapping : MonoBehaviour
         Debug.Log($"Initial VR Position: {initialVRPosition}");
         Debug.Log($"Initial Character Position: {initialCharacterPosition}");
     }
+
+    //이벤트 핸들러 등록 및 삭제
     private void OnEnable()
     {
         PythonSocketClient.OnDataReceived += UpdatePythonKeypoints;
@@ -150,62 +182,39 @@ public class PoseMapping : MonoBehaviour
     }
 
 
-    private Vector3[] ConvertArrayToVec3(float[][] array)
-    {
-        Vector3[] vectors = new Vector3[array.Length];
-        for (int i = 0; i < array.Length; i++)
-            vectors[i] = new Vector3(array[i][0], array[i][2], array[i][1]);
-
-        return vectors;
-    }
-
+    // Python model에서 생성된 키포인트를 받기위한 이벤트 리스너
     void UpdatePythonKeypoints(ModelOutputData data)
     {
         python_model_keypoints = data.GetKeypoints();
-
-        //Debug.Log($"현재 오른 발 위치:{python_model_keypoints[14]}");
-
-
     }
 
-    private void LateUpdate()
+    // Python model 입력을 위한 Normalized 머리, 손 키포인트 계산
+    public float[][] GetVRPosition()
     {
-        UpdateVRKeypoints();
-        if (is_calibrate_done)
-        {
-            ApplyPythonKeypoints();
-            //UpdateVRKeypoints();
-            UpdateBodyTransform();
-        }
+        Transform character_center = transform;
+
+        Vector3 head_normalize = character_center.InverseTransformPoint(head.vr_target.position);
+        Vector3 left_hand_normalize = character_center.InverseTransformPoint(left_hand.vr_target.position);
+        Vector3 right_hand_normalize = character_center.InverseTransformPoint(right_hand.vr_target.position);
+
+        float[] head_normalize_f = new float[3] { head_normalize.x, head_normalize.z, head_normalize.y };
+        float[] right_normalize_f = new float[3] { left_hand_normalize.x, left_hand_normalize.z, left_hand_normalize.y };
+        float[] left_normailze_f = new float[3] { right_hand_normalize.x, right_hand_normalize.z, right_hand_normalize.y };
+        float[][] vr_pos_data = new float[][] {head_normalize_f, left_normailze_f, right_normalize_f};
+
+        return vr_pos_data;
     }
 
+    // Tactile에서 얻은 keypoint를 캐릭터에 적용
     private void ApplyPythonKeypoints()
     {
-        //Vector3 character_pos = new Vector3(
-        //    (python_model_keypoints[11].x + python_model_keypoints[12].x) / 2,
-        //    (python_model_keypoints[11].y + python_model_keypoints[12].y) / 2,
-        //    (python_model_keypoints[11].z + python_model_keypoints[12].z) / 2);
-        //transform.position = character_pos;
-
-        //float yaw = head.vr_target.eulerAngles.y;
-        //transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.eulerAngles.x, yaw, transform.eulerAngles.z), turn_smoothness);
-
-        //nose.Map(python_model_keypoints[0]);
-        //left_shoulder.Map(python_model_keypoints[1]);
-        //right_shoulder.Map(python_model_keypoints[2]);
-        //left_wrist.Map(python_model_keypoints[5]);
-        //right_wrist.Map(python_model_keypoints[6]);
-        //left_hip.Map(python_model_keypoints[7]);
-        //right_hip.Map(python_model_keypoints[8]);
-        //left_ankle.Map(python_model_keypoints[11]);
-        //right_ankle.Map(python_model_keypoints[12]);
-
         for (int i = 0; i < python_model_keypoints.Length; i++)
         {   
             pose_maps[i].Map(python_model_keypoints[i]);
         }
     }
 
+    //VR에서 얻은 keypoint 머리, 손에 적용
     void UpdateVRKeypoints()
     {
         head.Map();
@@ -213,6 +222,7 @@ public class PoseMapping : MonoBehaviour
         right_hand.Map();
     }
 
+    //캐릭터 중심 좌표 업데이트 및 이동
     void UpdateBodyTransform()
     {
         Vector3 character_center = (python_model_keypoints[2] + python_model_keypoints[3]) / 2.0f;
@@ -224,19 +234,9 @@ public class PoseMapping : MonoBehaviour
 
 
         //transform.position = Vector3.Lerp(transform.position, final_body_pos, Time.deltaTime * move_smoothness);
-        transform.position = final_body_pos;
+        transform.position = final_body_pos; //일단 즉시 업데이트
 
         float yaw = head.vr_target.eulerAngles.y;
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.eulerAngles.x, yaw, transform.eulerAngles.z), turn_smoothness);
     }
-
-    void CalibratePose()
-    {
-        Vector3 center = (head.vr_target.position + left_hand.vr_target.position + right_hand.vr_target.position) / 3.0f;
-        center.y = 0f;
-
-        transform.position = center;
-    }
-
-
 }
