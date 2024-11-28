@@ -99,7 +99,7 @@ public class ObstacleSpawner : MonoBehaviour
         collectibleCollider.isTrigger = true; // 아이템은 트리거로 설정
 
         // 회전 스크립트 추가
-        spawnedCollectible.AddComponent<RotatingCollectible>();
+        //spawnedCollectible.AddComponent<RotatingCollectible>();
     }
 
     // Z축 위치가 이미 사용되었는지 확인
