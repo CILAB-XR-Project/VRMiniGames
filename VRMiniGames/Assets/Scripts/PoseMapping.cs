@@ -35,19 +35,19 @@ public class PoseMap
 
 /*
 1. T-pose calibration(done)
- - t-pose¸¦ ¼öÇàÇÏ¿© ÃÖÃÊ Ä³¸¯ÅÍ, VR Áß½É ÁÂÇ¥ ÀúÀå 
- - Ä³¸¯ÅÍ Áß½É ÁÂÇ¥·Î ÀÌµ¿(transform)
-2. Ä³¸¯ÅÍ Áß½ÉÀ» ±âÁØÀ¸·Î VR¿¡¼­ ¾òÀº ¸Ó¸®, ¼Õ ÁÂÇ¥ normailze (done)
-    - transform ±âÁØÀ¸·Î ¸Ó¸®, ¼Õ normalize
-    - ÀÌ°Å´Â ¾îµð¼­ ¼öÇà? pose mapping¿¡¼­ ÇÔ¼ö ¸¸µé°í ºÒ·¯¿À´Â ½ÄÀ¸·Î
-3. ¼¾¼­¿¡¼­ ¾òÀº ¾Ð·Âµ¥ÀÌÅÍ+normalized ¸Ó¸®, ¼Õ ÁÂÇ¥¸¦ »ç¿ëÇÑ Àü½Å Å°Æ÷ÀÎÆ® Ãß·Ð (ÇÔ¼ö ÇüÅÂ¸¸ ¸¸µé¾î ³õÀ½. ½ÇÁ¦ tactile ¿¬µ¿ ÄÚµå ÀÛ¼º ÇÊ¿ä)
-    -normalize ÁÂÇ¥¸¦ ÆÄÀÌ½ã ¸ðµ¨¿¡ Àü´ÞÇÏ¿© 10°³ÀÇ Å°Æ÷ÀÎÆ® Ãß·Ð
-4. ÇöÀç °ñ¹Ý ±âÁØÀ¸·Î Àü½Å Å°Æ÷ÀÎÆ® Ä³¸¯ÅÍ¿¡ Àû¿ë (done)
-    - ÇöÀç Ä³¸¯ÅÍ¸¦ ±âÁØÀ¸·Î localPosition¿¡ Å°Æ÷ÀÎÆ® Àû¿ë
-5. VRÀÇ À§Ä¡ ÀÌµ¿·®+¸ðµ¨¿¡¼­ Ãß·ÐÇÑ °ñ¹Ý ÁÂÇ¥·Î Ä³¸¯ÅÍ ÁÂÇ¥ Áß½É ÃÖ½ÅÈ­ (done?)
-    - VRÀÇ À§Ä¡ ÀÌµ¿·® + ¸ðµ¨¿¡¼­ Ãß·ÐÇÑ °ñ¹Ý ÁÂÇ¥¸¦ »ç¿ëÇØ Ä³¸¯ÅÍ Áß½É ÁÂÇ¥ ¾÷µ¥ÀÌÆ®
-    - VRÀÇ À§Ä¡ ÀÌµ¿Àº ´Ù¸¥ °÷¿¡¼­ ¼öÇàÇÏ¿©µµ 
-6. 2~5 ¹Ýº¹.
+ - t-poseï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½, VR ï¿½ß½ï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ 
+ - Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½Ìµï¿½(transform)
+2. Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ VRï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ó¸ï¿½, ï¿½ï¿½ ï¿½ï¿½Ç¥ normailze (done)
+    - transform ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ó¸ï¿½, ï¿½ï¿½ normalize
+    - ï¿½Ì°Å´ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½? pose mappingï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+3. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ð·Âµï¿½ï¿½ï¿½ï¿½ï¿½+normalized ï¿½Ó¸ï¿½, ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ß·ï¿½ (ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ tactile ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ ï¿½Û¼ï¿½ ï¿½Ê¿ï¿½)
+    -normalize ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½ðµ¨¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ 10ï¿½ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ß·ï¿½
+4. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ï¿½ï¿½Æ® Ä³ï¿½ï¿½ï¿½Í¿ï¿½ ï¿½ï¿½ï¿½ï¿½ (done)
+    - ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ localPositionï¿½ï¿½ Å°ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+5. VRï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½Ìµï¿½ï¿½ï¿½+ï¿½ðµ¨¿ï¿½ï¿½ï¿½ ï¿½ß·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ ï¿½ß½ï¿½ ï¿½Ö½ï¿½È­ (done?)
+    - VRï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½Ìµï¿½ï¿½ï¿½ + ï¿½ðµ¨¿ï¿½ï¿½ï¿½ ï¿½ß·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+    - VRï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ 
+6. 2~5 ï¿½Ýºï¿½.
 
  */
 
@@ -90,11 +90,11 @@ public class PoseMapping : MonoBehaviour
 
     //Calibration vars
     private bool is_calibrate_done = false;
-    private Vector3 accumulatedVRPosition; // VR ±â±âÀÇ ´©Àû À§Ä¡
+    private Vector3 accumulatedVRPosition; // VR ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
     private Vector3 accumulatedCenterPosition;
-    private Vector3 initialCharacterPosition; // Ä³¸¯ÅÍ ÃÊ±â À§Ä¡
-    private Vector3 initialVRPosition; // VR ÃÊ±â À§Ä¡
-    private int sampleCount; // ¼öÁýµÈ »ùÇÃÀÇ °³¼ö
+    private Vector3 initialCharacterPosition; // Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½ ï¿½ï¿½Ä¡
+    private Vector3 initialVRPosition; // VR ï¿½Ê±ï¿½ ï¿½ï¿½Ä¡
+    private int sampleCount; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     private void Start()
     {
@@ -109,8 +109,8 @@ public class PoseMapping : MonoBehaviour
             left_toe, right_toe
         };
 
-        //Ä³¸¯ÅÍ Áß½É ¹× ½ÃÀÛ ÁÂÇ¥ °è»ê¿ë Ä¶¸®ºê·¹ÀÌ¼Ç
-        //¾À ¹Ù²ð¶§¸¶´Ù...? Æ¯Á¤ À§Ä¡¿¡¼­ ¸Å¹ø ½ÃÀÛÇÒ°Å¸é »ó°ü ¾øÀ» ¼öµµ
+        //Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ Ä¶ï¿½ï¿½ï¿½ê·¹ï¿½Ì¼ï¿½
+        //ï¿½ï¿½ ï¿½Ù²ð¶§¸ï¿½ï¿½ï¿½...? Æ¯ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½Å¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ò°Å¸ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         StartCoroutine(StartCalibration(2.0f));
 
     }
@@ -125,7 +125,7 @@ public class PoseMapping : MonoBehaviour
         }
     }
 
-    //calibration ¼öÇà
+    //calibration ï¿½ï¿½ï¿½ï¿½
     IEnumerator StartCalibration(float duration)
     {
         accumulatedVRPosition = Vector3.zero;
@@ -133,32 +133,32 @@ public class PoseMapping : MonoBehaviour
 
         Debug.Log("Calibration started...");
 
-        // Calibration µ¿¾È VR ±â±âÀÇ À§Ä¡¸¦ ´©Àû
+        // Calibration ï¿½ï¿½ï¿½ï¿½ VR ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         float elapsedTime = 0.0f;
         while (elapsedTime < duration)
         {
             elapsedTime += Time.deltaTime;
 
-            // VR ±â±âÀÇ À§Ä¡ ´©Àû
+            // VR ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
             accumulatedVRPosition += head.vr_target.position;
-            //¸Ó¸®, ¾ç¼ÕÀÇ Áß½ÉÀ» Ä³¸¯ÅÍÀÇ Áß½ÉÀ¸·Î °è»ê
+            //ï¿½Ó¸ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             accumulatedCenterPosition += (head.vr_target.position + left_hand.vr_target.position + right_hand.vr_target.position) / 3.0f;
             sampleCount++;
 
-            // ¸Å ÇÁ·¹ÀÓ ½ÇÇà
+            // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             yield return null;
         }
 
-        // Calibration Á¾·á Ã³¸®
+        // Calibration ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
         CompleteCalibration();
     }
 
     void CompleteCalibration()
     {
-        // VR ÃÊ±â À§Ä¡¸¦ Æò±Õ°ªÀ¸·Î ¼³Á¤
+        // VR ï¿½Ê±ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½Õ°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         initialVRPosition = accumulatedVRPosition / sampleCount;
 
-        //Ä³¸¯ÅÍ ÃÖÃÊ Áß½É À§Ä¡ ÀúÀå
+        //Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
         //initialCharacterPosition = accumulatedCenterPosition / sampleCount;
         initialCharacterPosition = accumulatedVRPosition / sampleCount;
         initialCharacterPosition.y = 0f;
@@ -171,7 +171,7 @@ public class PoseMapping : MonoBehaviour
         Debug.Log($"Initial Character Position: {initialCharacterPosition}");
     }
 
-    //ÀÌº¥Æ® ÇÚµé·¯ µî·Ï ¹× »èÁ¦
+    //ï¿½Ìºï¿½Æ® ï¿½Úµé·¯ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private void OnEnable()
     {
         PythonSocketClient.OnDataReceived += UpdatePythonKeypoints;
@@ -183,13 +183,13 @@ public class PoseMapping : MonoBehaviour
     }
 
 
-    // Python model¿¡¼­ »ý¼ºµÈ Å°Æ÷ÀÎÆ®¸¦ ¹Þ±âÀ§ÇÑ ÀÌº¥Æ® ¸®½º³Ê
+    // Python modelï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Þ±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void UpdatePythonKeypoints(ModelOutputData data)
     {
         python_model_keypoints = data.GetKeypoints();
     }
 
-    // Python model ÀÔ·ÂÀ» À§ÇÑ Normalized ¸Ó¸®, ¼Õ Å°Æ÷ÀÎÆ® °è»ê
+    // Python model ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Normalized ï¿½Ó¸ï¿½, ï¿½ï¿½ Å°ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½
     public float[][] GetVRPosition()
     {
         Transform character_center = this.transform;
@@ -206,7 +206,7 @@ public class PoseMapping : MonoBehaviour
         return vr_pos_data;
     }
 
-    // Tactile¿¡¼­ ¾òÀº keypoint¸¦ Ä³¸¯ÅÍ¿¡ Àû¿ë
+    // Tactileï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ keypointï¿½ï¿½ Ä³ï¿½ï¿½ï¿½Í¿ï¿½ ï¿½ï¿½ï¿½ï¿½
     private void ApplyPythonKeypoints()
     {
         for (int i = 0; i < python_model_keypoints.Length; i++)
@@ -215,7 +215,7 @@ public class PoseMapping : MonoBehaviour
         }
     }
 
-    //VR¿¡¼­ ¾òÀº keypoint ¸Ó¸®, ¼Õ¿¡ Àû¿ë
+    //VRï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ keypoint ï¿½Ó¸ï¿½, ï¿½Õ¿ï¿½ ï¿½ï¿½ï¿½ï¿½
     void UpdateVRKeypoints()
     {
         head.Map();
@@ -223,23 +223,23 @@ public class PoseMapping : MonoBehaviour
         right_hand.Map();
     }
 
-    //Ä³¸¯ÅÍ Áß½É ÁÂÇ¥ ¾÷µ¥ÀÌÆ® ¹× ÀÌµ¿
+    //Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ ï¿½Ìµï¿½
     void UpdateBodyTransform()
     {
-        //¸ðµ¨ÀÌ Ãß·ÐÇÑ °ñ¹Ý À§Ä¡
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½ß·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
         Vector3 character_center = (python_model_keypoints[2] + python_model_keypoints[3]) / 2.0f;
         character_center.y = 0f;
 
-        // VR Çìµå¼Â¿¡¼­ ¿òÁ÷ÀÎ °Å¸®
+        // VR ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½
         Vector3 vr_move_offset = head.vr_target.position - initialVRPosition;
         vr_move_offset.y = 0f;
 
-        // Ä³¸¯ÅÍ ÃÖÁ¾ À§Ä¡ = VRÀÇ ¿òÁ÷ÀÎ °Å¸®+ ¸ðµ¨ÀÌ Ãß·ÐÇÑ °ñ¹Ý À§Ä¡
+        // Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ = VRï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½+ ï¿½ï¿½ï¿½ï¿½ ï¿½ß·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
         Vector3 final_body_pos = initialCharacterPosition + vr_move_offset + character_center + head_body_pos_offset; ;
 
 
         //transform.position = Vector3.Lerp(transform.position, final_body_pos, Time.deltaTime * move_smoothness);
-        transform.position = final_body_pos; //ÀÏ´Ü Áï½Ã ¾÷µ¥ÀÌÆ®
+        transform.position = final_body_pos; //ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
 
         float yaw = head.vr_target.eulerAngles.y;
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.eulerAngles.x, yaw, transform.eulerAngles.z), turn_smoothness);

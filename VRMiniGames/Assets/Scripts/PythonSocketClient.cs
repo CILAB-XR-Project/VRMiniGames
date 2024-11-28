@@ -9,7 +9,7 @@ using UnityEngine;
 public class PythonSocketClient : MonoBehaviour
 {
 
-    // ½Ì±ÛÅÏ ÀÎ½ºÅÏ½º
+    // ï¿½Ì±ï¿½ï¿½ï¿½ ï¿½Î½ï¿½ï¿½Ï½ï¿½
     private static PythonSocketClient _instance;
     public static PythonSocketClient Instance
     {
@@ -17,10 +17,10 @@ public class PythonSocketClient : MonoBehaviour
         {
             if (_instance == null)
             {
-                // ÇöÀç ¾À¿¡¼­ PythonSocketClient¸¦ Ã£½À´Ï´Ù.
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ PythonSocketClientï¿½ï¿½ Ã£ï¿½ï¿½ï¿½Ï´ï¿½.
                 _instance = FindObjectOfType<PythonSocketClient>();
 
-                // ¾ø´Ù¸é »õ·Î¿î GameObject¸¦ »ý¼ºÇÏ¿© Ãß°¡ÇÕ´Ï´Ù.
+                // ï¿½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½Î¿ï¿½ GameObjectï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ß°ï¿½ï¿½Õ´Ï´ï¿½.
                 if (_instance == null)
                 {
                     GameObject singletonObject = new GameObject("PythonSocketClient");
@@ -30,35 +30,35 @@ public class PythonSocketClient : MonoBehaviour
             return _instance;
         }
     }
-    // ÀÌ¹Ì ÃÊ±âÈ­µÇ¾ú´ÂÁö È®ÀÎÇÏ±â À§ÇÑ º¯¼ö
+    // ï¿½Ì¹ï¿½ ï¿½Ê±ï¿½È­ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private bool _initialized = false;
 
-    //ÀÌº¥Æ® ÇÚµé·¯
+    //ï¿½Ìºï¿½Æ® ï¿½Úµé·¯
     public static event Action<ModelOutputData> OnDataReceived;
 
-    //tcp socket °ü·Ã º¯¼ö
+    //tcp socket ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     TcpClient client;
     NetworkStream stream;
 
 
-    // ÁÂÇ¥¸¦ ¹Þ¾Æ¿À±â À§ÇÑ ¿ÀºêÁ§
+    // ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public PoseMapping character_pose;
 
     void Awake()
     {
-        // ½Ì±ÛÅÏ ¼³Á¤
+        // ï¿½Ì±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (_instance != null && _instance != this)
         {
-            Destroy(this.gameObject); // ÀÌ¹Ì ÀÎ½ºÅÏ½º°¡ Á¸ÀçÇÏ¸é ÀÌ °´Ã¼¸¦ ÆÄ±«ÇÕ´Ï´Ù.
+            Destroy(this.gameObject); // ï¿½Ì¹ï¿½ ï¿½Î½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½Ä±ï¿½ï¿½Õ´Ï´ï¿½.
             return;
         }
         else
         {
             _instance = this;
-            DontDestroyOnLoad(this.gameObject); // ¾À ÀüÈ¯ ½Ã °´Ã¼ À¯Áö
+            DontDestroyOnLoad(this.gameObject); // ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½
         }
 
-        // ÃÊ±âÈ­°¡ ÇÑ ¹ø¸¸ ÀÌ·ç¾îÁöµµ·Ï ¼³Á¤
+        // ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (!_initialized)
         {
             Initialize();
@@ -68,11 +68,11 @@ public class PythonSocketClient : MonoBehaviour
 
     private void Initialize()
     {
-        // TCP Å¬¶óÀÌ¾ðÆ® ÃÊ±âÈ­
+        // TCP Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½Ê±ï¿½È­
         client = new TcpClient("127.0.0.1", 12345);
         stream = client.GetStream();
 
-        // µ¥ÀÌÅÍ ¼Û¼ö½Å ½ÃÀÛ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         InvokeRepeating("SendData", 0.0666f, 0.0666f);
         InvokeRepeating("ReceiveData", 0.0666f, 0.0666f);
     }
@@ -83,10 +83,10 @@ public class PythonSocketClient : MonoBehaviour
         return new float[] { pos_vec3.x, pos_vec3.y, pos_vec3.z };
     }
 
-    //µ¥ÀÌÅÍ ¼Û½Å ÇÔ¼ö
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Û½ï¿½ ï¿½Ô¼ï¿½
     private void SendData()
     {
-        //VR ÁÂÇ¥ µ¥ÀÌÅÍ ¹Þ¾Æ¿À±â
+        //VR ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½
         float[][] vr_pos_data = character_pose.GetVRPosition();
         
         var dummy_pos_data = new
@@ -96,8 +96,8 @@ public class PythonSocketClient : MonoBehaviour
             right_hand_pos = ConvertVec3ToArray(new Vector3(0.5f, 1.5f, 0.2f)),
         };
 
-        Debug.Log($"VR ¸Ó¸® À§Ä¡:{vr_pos_data.ToString()}");
-        //VR ÁÂÇ¥ µ¥ÀÌÅÍ ¼Û½Å
+        Debug.Log($"VR ï¿½Ó¸ï¿½ ï¿½ï¿½Ä¡:{vr_pos_data.ToString()}");
+        //VR ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Û½ï¿½
         string json_vr_pos_data = JsonConvert.SerializeObject(vr_pos_data);
         json_vr_pos_data += "\n";
         byte[] byte_vr_pos_data = Encoding.UTF8.GetBytes(json_vr_pos_data);
@@ -106,21 +106,21 @@ public class PythonSocketClient : MonoBehaviour
     }
 
     
-    //µ¥ÀÌÅÍ ¼ö½Å ÇÔ¼ö
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
     private void ReceiveData()
     {
         if (stream.DataAvailable)
         {
-            //python model °á°ú ¼ö½Å
+            //python model ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             byte[] model_output_buffer = new byte[4096];
             int byte_model_output_data = stream.Read(model_output_buffer, 0, model_output_buffer.Length);
             string json_model_output_data = Encoding.UTF8.GetString(model_output_buffer, 0, byte_model_output_data);
 
             var model_output_data = JsonConvert.DeserializeObject<ModelOutputData>(json_model_output_data);
 
-            Debug.Log($"python ¸Ó¸® À§Ä¡{model_output_data.GetKeypoints()[0]}");
+            Debug.Log($"python ï¿½Ó¸ï¿½ ï¿½ï¿½Ä¡{model_output_data.GetKeypoints()[0]}");
 
-            //ÀÌº¥Æ® ¹ß»ý
+            //ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½
             OnDataReceived?.Invoke(model_output_data);
         }
     }
@@ -130,7 +130,7 @@ public class PythonSocketClient : MonoBehaviour
     // Update is called once per frame
     private void OnApplicationQuit()
     {
-        // ¾ÖÇÃ¸®ÄÉÀÌ¼Ç Á¾·á ½Ã ¼ÒÄÏ ´Ý±â
+        // ï¿½ï¿½ï¿½Ã¸ï¿½ï¿½ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ý±ï¿½
         if (stream != null)
             stream.Close();
         if (client != null)
@@ -142,10 +142,10 @@ public class PythonSocketClient : MonoBehaviour
 [Serializable]
 public class ModelOutputData
 {
-    public float[][] keypoints; //19°³ÀÇ kps 3dÁÂÇ¥
-    public int action_class; //ÇöÀç action class
+    public float[][] keypoints; //19ï¿½ï¿½ï¿½ï¿½ kps 3dï¿½ï¿½Ç¥
+    public int action_class; //ï¿½ï¿½ï¿½ï¿½ action class
 
-    // Å°Æ÷ÀÎÆ® vec3·Î º¯È¯ ÇÏ¿© ¸®ÅÏ
+    // Å°ï¿½ï¿½ï¿½ï¿½Æ® vec3ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½
     public Vector3[] GetKeypoints()
     {
         Vector3[] vectors = new Vector3[keypoints.Length];
@@ -166,6 +166,6 @@ public class ModelOutputData
 //    "BackwardWalking", 7
 //]
 
-    //action idx ¹ÝÈ¯(ÀÇ¹Ì´Â À§ ¸®½ºÆ® ÂüÁ¶)
+    //action idx ï¿½ï¿½È¯(ï¿½Ç¹Ì´ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½)
     public int GetAction() {  return action_class; }
 }

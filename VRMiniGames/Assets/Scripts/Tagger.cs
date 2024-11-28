@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Tagger : MonoBehaviour
 {
+    private Animator _animator;
+    private AnimationClip[] _myClips;
     private AudioSource _audioSource1;
     private AudioSource _audioSource2;
     private Transform _head;
@@ -13,6 +15,8 @@ public class Tagger : MonoBehaviour
     
     private void Start()
     {
+        _animator = GetComponent<Animator>();
+        _myClips = _animator.runtimeAnimatorController.animationClips;
         AudioSource[] audioSources = GetComponents<AudioSource>();
         if (audioSources.Length < 2)
         {
@@ -29,6 +33,7 @@ public class Tagger : MonoBehaviour
     }
     
     // PlayAudioAndRotate Coroutine
+    // ReSharper disable Unity.PerformanceAnalysis
     private IEnumerator PlayAudioAndRotate()
     {
         while (true)
@@ -39,6 +44,7 @@ public class Tagger : MonoBehaviour
             if (!_audioSource1.isPlaying)
             {
                 _audioSource1.Play();
+                SetAnimatorState("singing");
             }
             
             while (_audioSource1.isPlaying)
@@ -49,12 +55,14 @@ public class Tagger : MonoBehaviour
             if (!_audioSource2.isPlaying)
             {
                 _audioSource2.Play();
+                SetAnimatorState("turning");
             }
             yield return StartCoroutine(SmoothRotate(180f));
             
             yield return new WaitForSeconds(pauseAfterTurn);
             
             yield return StartCoroutine(SmoothRotate(180f));
+            SetAnimatorState("idle");
         }
     }
     
@@ -68,7 +76,7 @@ public class Tagger : MonoBehaviour
             float rotationStep = rotationSpeed * Time.deltaTime;
             if (Mathf.Abs(rotatedAngle) + rotationStep > Mathf.Abs(targetAngle))
             {
-                rotationStep = Mathf.Abs(targetAngle) - Mathf.Abs(rotatedAngle); // 초과 회전 방지
+                rotationStep = Mathf.Abs(targetAngle) - Mathf.Abs(rotatedAngle);
             }
             
             _head.Rotate(0, rotationStep * rotationDirection, 0);
@@ -76,6 +84,29 @@ public class Tagger : MonoBehaviour
             rotatedAngle += rotationStep;
             
             yield return null;
+        }
+    }
+    
+    private void SetAnimatorState(string state)
+    {
+        _animator.SetBool("isIdle", false);
+        _animator.SetBool("isSinging", false);
+        _animator.SetBool("isTurning", false);
+        
+        switch (state)
+        {
+            case "idle":
+                _animator.SetBool("isIdle", true);
+                break;
+            case "singing":
+                _animator.SetBool("isSinging", true);
+                break;
+            case "turning":
+                _animator.SetBool("isTurning", true);
+                break;
+            default:
+                Debug.LogWarning("Unknown state requested");
+                break;
         }
     }
 }
