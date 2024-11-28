@@ -159,7 +159,8 @@ public class PoseMapping : MonoBehaviour
         initialVRPosition = accumulatedVRPosition / sampleCount;
 
         //캐릭터 최초 중심 위치 저장
-        initialCharacterPosition = accumulatedCenterPosition / sampleCount;
+        //initialCharacterPosition = accumulatedCenterPosition / sampleCount;
+        initialCharacterPosition = accumulatedVRPosition / sampleCount;
         initialCharacterPosition.y = 0f;
 
         transform.position = initialCharacterPosition;
@@ -191,7 +192,7 @@ public class PoseMapping : MonoBehaviour
     // Python model 입력을 위한 Normalized 머리, 손 키포인트 계산
     public float[][] GetVRPosition()
     {
-        Transform character_center = transform;
+        Transform character_center = this.transform;
 
         Vector3 head_normalize = character_center.InverseTransformPoint(head.vr_target.position);
         Vector3 left_hand_normalize = character_center.InverseTransformPoint(left_hand.vr_target.position);
@@ -225,12 +226,16 @@ public class PoseMapping : MonoBehaviour
     //캐릭터 중심 좌표 업데이트 및 이동
     void UpdateBodyTransform()
     {
+        //모델이 추론한 골반 위치
         Vector3 character_center = (python_model_keypoints[2] + python_model_keypoints[3]) / 2.0f;
         character_center.y = 0f;
 
+        // VR 헤드셋에서 움직인 거리
         Vector3 vr_move_offset = head.vr_target.position - initialVRPosition;
         vr_move_offset.y = 0f;
-        Vector3 final_body_pos = initialCharacterPosition + vr_move_offset + character_center;
+
+        // 캐릭터 최종 위치 = VR의 움직인 거리+ 모델이 추론한 골반 위치
+        Vector3 final_body_pos = initialCharacterPosition + vr_move_offset + character_center + head_body_pos_offset; ;
 
 
         //transform.position = Vector3.Lerp(transform.position, final_body_pos, Time.deltaTime * move_smoothness);

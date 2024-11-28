@@ -96,7 +96,7 @@ public class PythonSocketClient : MonoBehaviour
             right_hand_pos = ConvertVec3ToArray(new Vector3(0.5f, 1.5f, 0.2f)),
         };
 
-        //Debug.Log($"VR 머리 위치:{hmd_pos.ToString()}");
+        Debug.Log($"VR 머리 위치:{vr_pos_data.ToString()}");
         //VR 좌표 데이터 송신
         string json_vr_pos_data = JsonConvert.SerializeObject(vr_pos_data);
         json_vr_pos_data += "\n";
@@ -118,7 +118,7 @@ public class PythonSocketClient : MonoBehaviour
 
             var model_output_data = JsonConvert.DeserializeObject<ModelOutputData>(json_model_output_data);
 
-            //Debug.Log($"python 머리 위치{ model_output_data.GetKeypoints()[0]}");
+            Debug.Log($"python 머리 위치{model_output_data.GetKeypoints()[0]}");
 
             //이벤트 발생
             OnDataReceived?.Invoke(model_output_data);

@@ -33,7 +33,7 @@ public class InputManager : MonoBehaviour
     private void Start()
     {
         Vector3 character_pos = character.position;
-        character_pos.y = 1.5f;
+        character_pos.y = 1.3f;
         transform.position = character_pos;
     }
 
