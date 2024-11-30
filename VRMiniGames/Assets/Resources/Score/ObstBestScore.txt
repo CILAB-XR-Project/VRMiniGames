@@ -1,0 +1,20 @@
+{
+  "ObstBestScore": [
+    {
+      "Player": "Bill",
+      "Score": 12.41
+    },
+    {
+      "Player": "Bob",
+      "Score": 15.51
+    },
+    {
+      "Player": "Dapper",
+      "Score": 70.67
+    },
+    {
+      "Player": "Dapper",
+      "Score": 78.90
+    }
+  ]
+}
