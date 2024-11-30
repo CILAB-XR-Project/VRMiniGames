@@ -5,21 +5,21 @@ using UnityEngine;
 public class ObstacleSpawner : MonoBehaviour
 {
     [SerializeField]
-    private float[] lanePositionsX = { -4f, 0f, 4f }; // ¼¼ °³ÀÇ ¶óÀÎ À§Ä¡ (XÃà ÁÂÇ¥)
+    private float[] lanePositionsX = { -4f, 0f, 4f }; // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ (Xï¿½ï¿½ ï¿½ï¿½Ç¥)
 
-    public GameObject[] obstaclePrefabs; // ¿©·¯ Àå¾Ö¹° ÇÁ¸®ÆÕÀ» ´ãÀ» ¹è¿­
-    public GameObject collectiblePrefab; // ¸ÔÀ» ¼ö ÀÖ´Â ÇÁ¸®ÆÕ
+    public GameObject[] obstaclePrefabs; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ö¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½è¿­
+    public GameObject collectiblePrefab; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public int numberOfObstacles = 6;
     public float spawnRangeZ = 4f;
-    public float forceStrength = 500f; // Ãæµ¹ ½Ã °¡ÇØÁú ÈûÀÇ ¼¼±â
-    public float destroyDelay = 1f; // Àå¾Ö¹°ÀÌ Á¦°ÅµÉ Áö¿¬ ½Ã°£
-    public float minDistanceBetweenObstacles = 2f; // Àå¾Ö¹° °£ ÃÖ¼Ò °Å¸®
+    public float forceStrength = 500f; // ï¿½æµ¹ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public float destroyDelay = 1f; // ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Åµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
+    public float minDistanceBetweenObstacles = 2f; // ï¿½ï¿½Ö¹ï¿½ ï¿½ï¿½ ï¿½Ö¼ï¿½ ï¿½Å¸ï¿½
 
-    private List<float> usedZPositions = new List<float>(); // ÀÌ¹Ì »ç¿ëµÈ ZÃà À§Ä¡ ÀúÀå
+    private List<float> usedZPositions = new List<float>(); // ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ Zï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
 
     void Start()
     {
-        // Roads ¿ÀºêÁ§Æ®ÀÇ ¸ðµç ÀÚ½ÄÀ» ¼øÈ¸
+        // Roads ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸
         foreach (Transform road in transform)
         {
             SpawnObstaclesOnRoad(road);
@@ -28,31 +28,31 @@ public class ObstacleSpawner : MonoBehaviour
 
     void SpawnObstaclesOnRoad(Transform roadBlock)
     {
-        usedZPositions.Clear(); // »õ·Î¿î Road¸¶´Ù ZÃà À§Ä¡ ÃÊ±âÈ­
+        usedZPositions.Clear(); // ï¿½ï¿½ï¿½Î¿ï¿½ Roadï¿½ï¿½ï¿½ï¿½ Zï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½Ê±ï¿½È­
 
-        // ¹«ÀÛÀ§·Î Á¦¿ÜÇÒ ¶óÀÎ ¼±ÅÃ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         int excludedLaneIndex = Random.Range(0, lanePositionsX.Length);
 
         for (int i = 0; i < numberOfObstacles; i++)
         {
-            // ·£´ýÇÏ°Ô Àå¾Ö¹° ÇÁ¸®ÆÕ ¼±ÅÃ
+            // ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½Ö¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             GameObject selectedObstacle = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
 
-            // ¹«ÀÛÀ§·Î Á¦¿ÜÇÑ ¶óÀÎÀ» ÇÇÇØ¼­ XÃà À§Ä¡ ¼±ÅÃ
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ Xï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
             float laneX;
             do
             {
                 laneX = lanePositionsX[Random.Range(0, lanePositionsX.Length)];
             } while (laneX == lanePositionsX[excludedLaneIndex]);
 
-            // ZÃà À§Ä¡ »ý¼º (°ãÄ¡Áö ¾Êµµ·Ï)
+            // Zï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Êµï¿½ï¿½ï¿½)
             float spawnZ;
-            int attempts = 0; // ¹«ÇÑ ·çÇÁ ¹æÁö¿ë
+            int attempts = 0; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             do
             {
                 spawnZ = Random.Range(-spawnRangeZ, spawnRangeZ);
                 attempts++;
-            } while (IsZPositionUsed(spawnZ) && attempts < 100); // °ãÄ¡Áö ¾Êµµ·Ï °Ë»ç
+            } while (IsZPositionUsed(spawnZ) && attempts < 100); // ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Êµï¿½ï¿½ï¿½ ï¿½Ë»ï¿½
 
             if (attempts >= 100)
             {
@@ -60,56 +60,55 @@ public class ObstacleSpawner : MonoBehaviour
                 continue;
             }
 
-            // »ç¿ëµÈ ZÃà À§Ä¡·Î ÀúÀå
+            // ï¿½ï¿½ï¿½ï¿½ Zï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             usedZPositions.Add(spawnZ);
 
-            // Àå¾Ö¹° À§Ä¡ ¼³Á¤
+            // ï¿½ï¿½Ö¹ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
             Vector3 spawnPosition = roadBlock.position + new Vector3(laneX, 0, spawnZ);
 
-            // Àå¾Ö¹° »ý¼º
+            // ï¿½ï¿½Ö¹ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (Random.value > 0.7f)
             {
                 GameObject spawnedObstacle = Instantiate(selectedObstacle, spawnPosition, Quaternion.identity);
-                spawnedObstacle.tag = "obstacle"; // ÅÂ±× ¼³Á¤
-                spawnedObstacle.transform.localScale *= 2f; // Å©±â¸¦ µÎ ¹è·Î ¼³Á¤
+                spawnedObstacle.tag = "obstacle"; // ï¿½Â±ï¿½ ï¿½ï¿½ï¿½ï¿½
+                spawnedObstacle.transform.localScale *= 2f; // Å©ï¿½â¸¦ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-                // Rigidbody ÄÄÆ÷³ÍÆ®¸¦ Ãß°¡ÇÏ°í ÃÊ±â ¼³Á¤
+                // Rigidbody ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ï°ï¿½ ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½
                 Rigidbody rb = spawnedObstacle.AddComponent<Rigidbody>();
-                rb.isKinematic = true; // ±âº»ÀûÀ¸·Î ºñÈ°¼ºÈ­
+                rb.isKinematic = true; // ï¿½âº»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
 
-                // ObstacleBehavior ½ºÅ©¸³Æ®¸¦ Ãß°¡ÇÏ¿© Ãæµ¹ ½Ã ³¯¾Æ°¡´Â È¿°ú¿Í Á¦°Å¸¦ °ü¸®
+                // ObstacleBehavior ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ï¿ï¿½ ï¿½æµ¹ ï¿½ï¿½ ï¿½ï¿½ï¿½Æ°ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½ï¿½
                 ObstacleBehavior behavior = spawnedObstacle.AddComponent<ObstacleBehavior>();
                 behavior.forceStrength = forceStrength;
                 behavior.destroyDelay = destroyDelay;
 
-                // SphereCollider Ãß°¡
+                // SphereCollider ï¿½ß°ï¿½
                 SphereCollider obstacleCollider = spawnedObstacle.AddComponent<SphereCollider>();
-                obstacleCollider.isTrigger = false; // ±âº»ÀûÀ¸·Î Ãæµ¹ Ã³¸®
+                obstacleCollider.isTrigger = false; // ï¿½âº»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½æµ¹ Ã³ï¿½ï¿½
             }
         }
 
-        // Á¦¿ÜµÈ ¶óÀÎ¿¡ ¸ÔÀ» ¼ö ÀÖ´Â ÇÁ¸®ÆÕ ¹èÄ¡
-        float collectibleSpawnZ = Random.Range(-spawnRangeZ, spawnRangeZ); // ZÃà À§Ä¡ ·£´ý ¼³Á¤
+        // ï¿½ï¿½ï¿½Üµï¿½ ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
+        float collectibleSpawnZ = Random.Range(-spawnRangeZ, spawnRangeZ); // Zï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         Vector3 collectiblePosition = roadBlock.position + new Vector3(lanePositionsX[excludedLaneIndex], 2, collectibleSpawnZ);
         GameObject spawnedCollectible = Instantiate(collectiblePrefab, collectiblePosition, Quaternion.identity);
-        spawnedCollectible.tag = "item"; // ÅÂ±× ¼³Á¤
+        spawnedCollectible.tag = "item"; // ï¿½Â±ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-        // SphereCollider Ãß°¡
+        // SphereCollider ï¿½ß°ï¿½
         SphereCollider collectibleCollider = spawnedCollectible.AddComponent<SphereCollider>();
-        collectibleCollider.isTrigger = true; // ¾ÆÀÌÅÛÀº Æ®¸®°Å·Î ¼³Á¤
+        collectibleCollider.isTrigger = true; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½Å·ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-        // È¸Àü ½ºÅ©¸³Æ® Ãß°¡
-        spawnedCollectible.AddComponent<RotatingCollectible>();
+        // È¸ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ® ï¿½ß°ï¿½
     }
 
-    // ZÃà À§Ä¡°¡ ÀÌ¹Ì »ç¿ëµÇ¾ú´ÂÁö È®ÀÎ
+    // Zï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
     bool IsZPositionUsed(float zPosition)
     {
         foreach (float usedZ in usedZPositions)
         {
             if (Mathf.Abs(usedZ - zPosition) < minDistanceBetweenObstacles)
             {
-                return true; // °ãÄ£´Ù¸é »ç¿ë ºÒ°¡
+                return true; // ï¿½ï¿½Ä£ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½
             }
         }
         return false;
