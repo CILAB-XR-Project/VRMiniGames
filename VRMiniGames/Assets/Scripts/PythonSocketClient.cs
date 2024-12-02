@@ -1,26 +1,25 @@
-using Meta.WitAi.Json;
+癤퓎sing Meta.WitAi.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class PythonSocketClient : MonoBehaviour
 {
-
-    // 싱글턴 인스턴스
+    //Singleton pattern
     private static PythonSocketClient _instance;
+    private bool _initialized = false;
     public static PythonSocketClient Instance
     {
         get
         {
             if (_instance == null)
             {
-                // 현재 씬에서 PythonSocketClient를 찾습니다.
                 _instance = FindObjectOfType<PythonSocketClient>();
 
-                // 없다면 새로운 GameObject를 생성하여 추가합니다.
                 if (_instance == null)
                 {
                     GameObject singletonObject = new GameObject("PythonSocketClient");
@@ -30,37 +29,22 @@ public class PythonSocketClient : MonoBehaviour
             return _instance;
         }
     }
-    // 이미 초기화되었는지 확인하기 위한 변수
-    private bool _initialized = false;
-
-    //이벤트 핸들러
-    public static event Action<ModelOutputData> OnDataReceived;
-
-    //tcp socket 관련 변수
-    TcpClient client;
-    NetworkStream stream;
-
-
-    // 좌표를 받아오기 위한 오브젝트 들
-    public GameObject hmd;
-    public GameObject left_controller;
-    public GameObject right_controller;
 
     void Awake()
     {
-        // 싱글턴 설정
+
         if (_instance != null && _instance != this)
         {
-            Destroy(this.gameObject); // 이미 인스턴스가 존재하면 이 객체를 파괴합니다.
+            Destroy(this.gameObject);
             return;
         }
         else
         {
             _instance = this;
-            DontDestroyOnLoad(this.gameObject); // 씬 전환 시 객체 유지
+            DontDestroyOnLoad(this.gameObject); 
         }
 
-        // 초기화가 한 번만 이루어지도록 설정
+
         if (!_initialized)
         {
             Initialize();
@@ -68,69 +52,171 @@ public class PythonSocketClient : MonoBehaviour
         }
     }
 
+    //Socket Communication Event Handler
+    public static event Action<ModelOutputData> OnDataReceived;
+
+    //Socket Commnuicaters
+    TcpClient client;
+    NetworkStream stream;
+    private  byte[] model_output_buffer = new byte[4096];
+
+    //public PoseMapping character_pose;
+
+    // Start cleint for socket communication
+    //private void Initialize()
+    //{
+
+    //    client = new TcpClient("127.0.0.1", 12345);
+    //    stream = client.GetStream();
+
+
+    //    //InvokeRepeating("SendData", 0.0666f, 0.0666f);
+    //    InvokeRepeating("ReceiveData", 0.0666f, 0.0666f);
+    //}
+
     private void Initialize()
     {
-        // TCP 클라이언트 초기화
-        client = new TcpClient("127.0.0.1", 12345);
-        stream = client.GetStream();
+        try
+        {
+            client = new TcpClient("127.0.0.1", 12345);
+            stream = client.GetStream();
+            Debug.Log("Python Server Connected");
 
-        // 데이터 송수신 시작
-        InvokeRepeating("SendData", 0.0666f, 0.0666f);
-        InvokeRepeating("ReceiveData", 0.0666f, 0.0666f);
+            Task.Run(() => ReceiveDataAsync());
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Initialize Socket Connection Err: {e.Message}");
+        }
     }
 
+    //private async Task ReceiveDataAsync()
+    //{
+    //    while(client.Connected)
+    //    {
+    //        try
+    //        {
+    //            if (stream.DataAvailable)
+    //            {
+    //                int byte_model_output_data = await stream.ReadAsync(model_output_buffer, 0, model_output_buffer.Length);
+    //                if (byte_model_output_data > 0)
+    //                {
+    //                    string json_model_output_data = Encoding.UTF8.GetString(model_output_buffer, 0, byte_model_output_data);
+    //                    Debug.Log($"Received: {json_model_output_data}");
+
+    //                    var model_output_data = JsonConvert.DeserializeObject<ModelOutputData>(json_model_output_data);
+
+    //                    OnDataReceived?.Invoke(model_output_data);
+    //                }
+    //            }
+    //        }
+    //        catch (Exception e)
+    //        {
+    //            Debug.LogError($"Error in receiving data: {e.Message}");
+    //            break;
+    //        }
+    //    }
+    //}
+    private async Task ReceiveDataAsync()
+    {
+        while (client.Connected)
+        {
+            try
+            {
+                if (stream == null)
+                {
+                    Debug.LogError("Stream is null.");
+                    break;
+                }
+
+                if (stream.DataAvailable)
+                {
+                    int bytesRead = await stream.ReadAsync(model_output_buffer, 0, model_output_buffer.Length);
+                    if (bytesRead > 0)
+                    {
+                        string json_model_output_data = Encoding.UTF8.GetString(model_output_buffer, 0, bytesRead);
+                        //Debug.Log($"Received: {json_model_output_data}");
+
+                        try
+                        {
+                            var model_output_data = JsonConvert.DeserializeObject<ModelOutputData>(json_model_output_data);
+                            if (model_output_data == null)
+                            {
+                                Debug.LogError("Deserialized data is null.");
+                                continue;
+                            }
+
+                            OnDataReceived?.Invoke(model_output_data);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogError($"JSON deserialization error: {ex.Message}");
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Error in receiving data: {e.Message}");
+                break;
+            }
+        }
+    }
+
+    //Vec3[] to float[][]
     private float[] ConvertVec3ToArray(Vector3 pos_vec3)
     {
         return new float[] { pos_vec3.x, pos_vec3.y, pos_vec3.z };
     }
 
-    //데이터 송신 함수
-    private void SendData()
-    {
-        //VR 좌표 데이터
-        var vr_pos_data = new
-        {
-            hmd_pos = ConvertVec3ToArray(hmd.transform.position),
-            left_hand_pos = ConvertVec3ToArray(left_controller.transform.position),
-            right_hand_pos = ConvertVec3ToArray(right_controller.transform.position)
-        };
+    //Send VR kps data to Python(Not Using now)
+    //private void SendData()
+    //{
 
-        var tmp_pos_data = new
-        {
-            hmd_pos = ConvertVec3ToArray(new Vector3(0.0f, 1.7f, 0.0f)),
-            left_hand_pos = ConvertVec3ToArray(new Vector3(-0.5f, 1.5f, 0.2f)),
-            right_hand_pos = ConvertVec3ToArray(new Vector3(0.5f, 1.5f, 0.2f)),
-        };
+    //    float[][] vr_pos_data = character_pose.GetVRPosition();
+        
+    //    var dummy_pos_data = new
+    //    {
+    //        hmd_pos = ConvertVec3ToArray(new Vector3(0.0f, 1.7f, 0.0f)),
+    //        left_hand_pos = ConvertVec3ToArray(new Vector3(-0.5f, 1.5f, 0.2f)),
+    //        right_hand_pos = ConvertVec3ToArray(new Vector3(0.5f, 1.5f, 0.2f)),
+    //    };
 
-        //VR 좌표 데이터 송신
-        string json_vr_pos_data = JsonConvert.SerializeObject(vr_pos_data);
-        byte[] byte_vr_pos_data = Encoding.UTF8.GetBytes(json_vr_pos_data);
-        stream.Write(byte_vr_pos_data, 0, byte_vr_pos_data.Length);
+    //    Debug.Log($"VR kps :{vr_pos_data.ToString()}");
 
-    }
+    //    string json_vr_pos_data = JsonConvert.SerializeObject(vr_pos_data);
+    //    json_vr_pos_data += "\n";
+    //    byte[] byte_vr_pos_data = Encoding.UTF8.GetBytes(json_vr_pos_data);
+    //    stream.Write(byte_vr_pos_data, 0, byte_vr_pos_data.Length);
 
-    
-    //데이터 수신 함수
-    private void ReceiveData()
-    {
-        if (stream.DataAvailable)
-        {
-            //python model 결과 수신
-            byte[] model_output_buffer = new byte[4096];
-            int byte_model_output_data = stream.Read(model_output_buffer, 0, model_output_buffer.Length);
-            string json_model_output_data = Encoding.UTF8.GetString(model_output_buffer, 0, byte_model_output_data);
-
-            var model_output_data = JsonConvert.DeserializeObject<ModelOutputData>(json_model_output_data);
-            OnDataReceived?.Invoke(model_output_data);
-        }
-    }
+    //}
 
 
+    // Recieve Data from python (Not Using now)
+    //private void ReceiveData()
+    //{
+    //    if (stream.DataAvailable)
+    //    {
 
-    // Update is called once per frame
+    //        byte[] model_output_buffer = new byte[1024];
+    //        int byte_model_output_data = stream.Read(model_output_buffer, 0, model_output_buffer.Length);
+    //        string json_model_output_data = Encoding.UTF8.GetString(model_output_buffer, 0, byte_model_output_data);
+
+    //        var model_output_data = JsonConvert.DeserializeObject<ModelOutputData>(json_model_output_data);
+
+    //        Debug.Log($"Keypoint:{model_output_data.GetKeypoints()[0]}");
+    //        Debug.Log($"Action: {model_output_data.GetAction()}");
+    //        Debug.Log("");
+
+    //        OnDataReceived?.Invoke(model_output_data);
+    //    }
+    //}
+
+
+
+    // End communication
     private void OnApplicationQuit()
     {
-        // 애플리케이션 종료 시 소켓 닫기
         if (stream != null)
             stream.Close();
         if (client != null)
@@ -142,8 +228,8 @@ public class PythonSocketClient : MonoBehaviour
 [Serializable]
 public class ModelOutputData
 {
-    public float[][] keypoints; //19개의 kps 3d좌표
-    public int action_class; //현재 action class
+    public float[][] keypoints; 
+    public int action_class; 
 
     public Vector3[] GetKeypoints()
     {
@@ -152,5 +238,28 @@ public class ModelOutputData
             vectors[i] = new Vector3(keypoints[i][0], keypoints[i][2], keypoints[i][1]);
 
         return vectors;
+    }
+
+
+    public string GetAction()
+    /**
+     * "Squat", 0
+     * "Lunge", 1
+     * "Jump", 2
+     * "Stepper", 3
+     * "Walking", 4
+     * "InPlaceWalking", 5
+     * "SideWalking", 6
+     * "BackwardWalking", 7
+    **/
+    {
+        if (action_class == 0)
+            return "squat";
+        else if (action_class == 1)
+            return "lunge";
+        else if (action_class == 4 || action_class == 5)
+            return "walk";
+        else
+            return "others";
     }
 }
