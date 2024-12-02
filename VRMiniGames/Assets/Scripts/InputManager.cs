@@ -2,7 +2,7 @@ using Oculus.Interaction.Input;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 public class InputManager : MonoBehaviour
 {
     //Moving speed
@@ -16,6 +16,8 @@ public class InputManager : MonoBehaviour
     private Vector3 front_direction = Vector3.forward;
     private bool move_only_front = false;
 
+
+    public TMP_Text action_text;
     //public Transform character;
 
     //private void Start()
@@ -44,6 +46,7 @@ public class InputManager : MonoBehaviour
     void Update()
     {
         Move();
+        action_text.text = cur_action;
     }
 
 
@@ -59,7 +62,7 @@ public class InputManager : MonoBehaviour
             {
                 Vector3 hmd_front = hmd_transform.forward;
                 hmd_front.y = 0f;
-                //transform.position += hmd_front * speed * Time.deltaTime;
+                transform.position += hmd_front * speed * Time.deltaTime;
             }
         }
         //if (Input.GetKey(KeyCode.A))
