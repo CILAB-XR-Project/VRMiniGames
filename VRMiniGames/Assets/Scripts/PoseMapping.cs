@@ -3,54 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 
-[System.Serializable]
-public class VRMap
-{
-    public Transform vr_target;
-    public Transform ik_target;
-    public Vector3 tracking_pos_offset;
-    public Vector3 tracking_rotation_offset;
-    public void Map()
-    {
-        ik_target.position = vr_target.TransformPoint(tracking_pos_offset);
-        ik_target.rotation = vr_target.rotation * Quaternion.Euler(tracking_rotation_offset);
-    }
-}
-
-[System.Serializable]
-public class PoseMap
-{
-    //public Vector3 pose_target;
-    public Transform IK_target;
-    //public Transform IK_Child;
-    public Vector3 tracking_pos_offset;
-    //public Vector3 tracking_rotation_offset;
-    public void Map(Vector3 pose_target)
-    {
-        IK_target.localPosition = pose_target + tracking_pos_offset;
-    }
-
-}
-
-
-/*
-1. T-pose calibration(done)
- - t-pose�� �����Ͽ� ���� ĳ����, VR �߽� ��ǥ ���� 
- - ĳ���� �߽� ��ǥ�� �̵�(transform)
-2. ĳ���� �߽��� �������� VR���� ���� �Ӹ�, �� ��ǥ normailze (done)
-    - transform �������� �Ӹ�, �� normalize
-    - �̰Ŵ� ��� ����? pose mapping���� �Լ� ����� �ҷ����� ������
-3. �������� ���� �зµ�����+normalized �Ӹ�, �� ��ǥ�� ����� ���� Ű����Ʈ �߷� (�Լ� ���¸� ����� ����. ���� tactile ���� �ڵ� �ۼ� �ʿ�)
-    -normalize ��ǥ�� ���̽� �𵨿� �����Ͽ� 10���� Ű����Ʈ �߷�
-4. ���� ��� �������� ���� Ű����Ʈ ĳ���Ϳ� ���� (done)
-    - ���� ĳ���͸� �������� localPosition�� Ű����Ʈ ����
-5. VR�� ��ġ �̵���+�𵨿��� �߷��� ��� ��ǥ�� ĳ���� ��ǥ �߽� �ֽ�ȭ (done?)
-    - VR�� ��ġ �̵��� + �𵨿��� �߷��� ��� ��ǥ�� ����� ĳ���� �߽� ��ǥ ������Ʈ
-    - VR�� ��ġ �̵��� �ٸ� ������ �����Ͽ��� 
-6. 2~5 �ݺ�.
-
- */
-
 
 public class PoseMapping : MonoBehaviour
 {
@@ -90,11 +42,11 @@ public class PoseMapping : MonoBehaviour
 
     //Calibration vars
     private bool is_calibrate_done = false;
-    private Vector3 accumulatedVRPosition; // VR ����� ���� ��ġ
+    private Vector3 accumulatedVRPosition; 
     private Vector3 accumulatedCenterPosition;
-    private Vector3 initialCharacterPosition; // ĳ���� �ʱ� ��ġ
-    private Vector3 initialVRPosition; // VR �ʱ� ��ġ
-    private int sampleCount; // ������ ������ ����
+    private Vector3 initialCharacterPosition; 
+    private Vector3 initialVRPosition; 
+    private int sampleCount;
 
     private void Start()
     {
@@ -109,8 +61,7 @@ public class PoseMapping : MonoBehaviour
             left_toe, right_toe
         };
 
-        //ĳ���� �߽� �� ���� ��ǥ ���� Ķ���극�̼�
-        //�� �ٲ𶧸���...? Ư�� ��ġ���� �Ź� �����ҰŸ� ��� ���� ����
+
         StartCoroutine(StartCalibration(2.0f));
 
     }
@@ -125,7 +76,7 @@ public class PoseMapping : MonoBehaviour
         }
     }
 
-    //calibration ����
+
     IEnumerator StartCalibration(float duration)
     {
         accumulatedVRPosition = Vector3.zero;
@@ -133,32 +84,32 @@ public class PoseMapping : MonoBehaviour
 
         Debug.Log("Calibration started...");
 
-        // Calibration ���� VR ����� ��ġ�� ����
+
         float elapsedTime = 0.0f;
         while (elapsedTime < duration)
         {
             elapsedTime += Time.deltaTime;
 
-            // VR ����� ��ġ ����
+
             accumulatedVRPosition += head.vr_target.position;
-            //�Ӹ�, ����� �߽��� ĳ������ �߽����� ���
+
             accumulatedCenterPosition += (head.vr_target.position + left_hand.vr_target.position + right_hand.vr_target.position) / 3.0f;
             sampleCount++;
 
-            // �� ������ ����
+
             yield return null;
         }
 
-        // Calibration ���� ó��
+
         CompleteCalibration();
     }
 
     void CompleteCalibration()
     {
-        // VR �ʱ� ��ġ�� ��հ����� ����
+
         initialVRPosition = accumulatedVRPosition / sampleCount;
 
-        //ĳ���� ���� �߽� ��ġ ����
+
         //initialCharacterPosition = accumulatedCenterPosition / sampleCount;
         initialCharacterPosition = accumulatedVRPosition / sampleCount;
         initialCharacterPosition.y = 0f;
@@ -171,7 +122,7 @@ public class PoseMapping : MonoBehaviour
         Debug.Log($"Initial Character Position: {initialCharacterPosition}");
     }
 
-    //�̺�Ʈ �ڵ鷯 ��� �� ����
+
     private void OnEnable()
     {
         PythonSocketClient.OnDataReceived += UpdatePythonKeypoints;
@@ -183,13 +134,13 @@ public class PoseMapping : MonoBehaviour
     }
 
 
-    // Python model���� ������ Ű����Ʈ�� �ޱ����� �̺�Ʈ ������
-    void UpdatePythonKeypoints(ModelOutputData data)
+
+    private void UpdatePythonKeypoints(ModelOutputData data)
     {
         python_model_keypoints = data.GetKeypoints();
     }
 
-    // Python model �Է��� ���� Normalized �Ӹ�, �� Ű����Ʈ ���
+
     public float[][] GetVRPosition()
     {
         Transform character_center = this.transform;
@@ -206,16 +157,16 @@ public class PoseMapping : MonoBehaviour
         return vr_pos_data;
     }
 
-    // Tactile���� ���� keypoint�� ĳ���Ϳ� ����
+
     private void ApplyPythonKeypoints()
     {
         for (int i = 0; i < python_model_keypoints.Length; i++)
         {   
-            pose_maps[i].Map(python_model_keypoints[i]);
+            pose_maps[i].Map(python_model_keypoints[i], this.transform);
         }
     }
 
-    //VR���� ���� keypoint �Ӹ�, �տ� ����
+
     void UpdateVRKeypoints()
     {
         head.Map();
@@ -223,23 +174,23 @@ public class PoseMapping : MonoBehaviour
         right_hand.Map();
     }
 
-    //ĳ���� �߽� ��ǥ ������Ʈ �� �̵�
+   
     void UpdateBodyTransform()
     {
-        //���� �߷��� ��� ��ġ
+
         Vector3 character_center = (python_model_keypoints[2] + python_model_keypoints[3]) / 2.0f;
         character_center.y = 0f;
 
-        // VR ���¿��� ������ �Ÿ�
+
         Vector3 vr_move_offset = head.vr_target.position - initialVRPosition;
         vr_move_offset.y = 0f;
 
-        // ĳ���� ���� ��ġ = VR�� ������ �Ÿ�+ ���� �߷��� ��� ��ġ
+
         Vector3 final_body_pos = initialCharacterPosition + vr_move_offset + character_center + head_body_pos_offset; ;
 
 
         //transform.position = Vector3.Lerp(transform.position, final_body_pos, Time.deltaTime * move_smoothness);
-        transform.position = final_body_pos; //�ϴ� ��� ������Ʈ
+        transform.position = final_body_pos; 
 
         float yaw = head.vr_target.eulerAngles.y;
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.eulerAngles.x, yaw, transform.eulerAngles.z), turn_smoothness);

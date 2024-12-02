@@ -5,14 +5,27 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    //Moving speed
     public float speed = 1.0f;
 
-    private int cur_action;
+    //Currnet action from tactile
+    private string cur_action;
+
+    // Variables for moving direction
     public Transform hmd_transform;
-    public Transform character;
+    private Vector3 front_direction = Vector3.forward;
+    private bool move_only_front = false;
 
+    //public Transform character;
 
+    //private void Start()
+    //{
+    //    Vector3 character_pos = character.position;
+    //    character_pos.y = 1.3f;
+    //    transform.position = character_pos;
+    //}
 
+    //Socket communication evnent listener functions
     private void OnEnable()
     {
         PythonSocketClient.OnDataReceived += UpdatePythonAction;
@@ -22,28 +35,32 @@ public class InputManager : MonoBehaviour
     {
         PythonSocketClient.OnDataReceived -= UpdatePythonAction;
     }
+    void UpdatePythonAction(ModelOutputData data)
+    {
+        this.cur_action = data.GetAction();
+        print($"Action: {cur_action}");
+    }
 
-    // Update is called once per frame
     void Update()
     {
         Move();
     }
 
 
-    private void Start()
-    {
-        Vector3 character_pos = character.position;
-        character_pos.y = 1.3f;
-        transform.position = character_pos;
-    }
-
     void Move()
     {
-        if (cur_action == 4 || cur_action == 5)
-        {
-            Vector3 hmd_front = hmd_transform.forward;
-            hmd_front.y = 0f;
-            transform.position += hmd_front * speed * Time.deltaTime;
+        if (cur_action == "walk")
+        {   
+            if (move_only_front)
+            {
+                transform.position = front_direction * speed * Time.deltaTime;
+            }
+            else
+            {
+                Vector3 hmd_front = hmd_transform.forward;
+                hmd_front.y = 0f;
+                //transform.position += hmd_front * speed * Time.deltaTime;
+            }
         }
         //if (Input.GetKey(KeyCode.A))
         //{
@@ -63,14 +80,22 @@ public class InputManager : MonoBehaviour
         //}
     }
 
+    //Setters
     public void SetSpeed(float speed)
     {
         this.speed = speed;
     }
 
-    void UpdatePythonAction(ModelOutputData data)
-    { 
-        cur_action = data.GetAction();
+    public void SetFront(Vector3 front)
+    {
+        this.front_direction = front;
     }
+
+    public void SetOnlyMovingFront(bool move_front)
+    {
+        this.move_only_front = move_front;
+    }
+
+    //
 
 }
