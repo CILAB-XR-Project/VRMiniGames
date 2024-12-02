@@ -1673,6 +1673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turn_smoothness: 0.1
+  move_smoothness: 0.1
   head_body_pos_offset: {x: 0, y: -1.6, z: 0}
   head_body_yaw_offset: 0
   head:
@@ -1688,8 +1689,8 @@ MonoBehaviour:
   right_hand:
     vr_target: {fileID: 0}
     ik_target: {fileID: 1605961340039810890}
-    tracking_pos_offset: {x: -90, y: 90, z: 0}
-    tracking_rotation_offset: {x: 0, y: 0, z: 0}
+    tracking_pos_offset: {x: 0, y: 0, z: 0}
+    tracking_rotation_offset: {x: -90, y: 90, z: 0}
   left_shoulder:
     IK_target: {fileID: 1898591914344459554}
     tracking_pos_offset: {x: 0, y: 0, z: 0}
