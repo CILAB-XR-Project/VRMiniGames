@@ -58,13 +58,13 @@ namespace rulebot
             {
                 var stateInfo = tagger_animator.GetCurrentAnimatorStateInfo(0);
 
-                if (stateInfo.IsName("idle") || stateInfo.IsName("singing"))
+                if (stateInfo.IsName("idle") || stateInfo.IsName("singing") || stateInfo.IsName("turning"))
                 {
                     string[] states = { "walking", "jogging", "running" };
                     currentMovementState = states[Random.Range(0, states.Length)];
                     SetAnimatorState(currentMovementState);
                 }
-                else if (stateInfo.IsName("turning"))
+                else if (stateInfo.IsName("checking"))
                 {
                     currentMovementState = "squart";
                     SetAnimatorState("squart");

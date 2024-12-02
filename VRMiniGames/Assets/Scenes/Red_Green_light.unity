@@ -136,6 +136,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 110312500263791266, guid: 67758864a5dffb745aabc8e45a4f4a81, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 110312500263791266, guid: 67758864a5dffb745aabc8e45a4f4a81, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 940104958489803287, guid: 67758864a5dffb745aabc8e45a4f4a81, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -143,6 +151,26 @@ PrefabInstance:
     - target: {fileID: 1313601791892902288, guid: 67758864a5dffb745aabc8e45a4f4a81, type: 3}
       propertyPath: m_Name
       value: Playground
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102497334022479571, guid: 67758864a5dffb745aabc8e45a4f4a81, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102497334022479571, guid: 67758864a5dffb745aabc8e45a4f4a81, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 2216132791386219708, guid: 67758864a5dffb745aabc8e45a4f4a81, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3146355037950699025, guid: 67758864a5dffb745aabc8e45a4f4a81, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3146355037950699025, guid: 67758864a5dffb745aabc8e45a4f4a81, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 3187515383957611205, guid: 67758864a5dffb745aabc8e45a4f4a81, type: 3}
       propertyPath: m_LocalRotation.w
@@ -195,6 +223,14 @@ PrefabInstance:
     - target: {fileID: 3330944929028762273, guid: 67758864a5dffb745aabc8e45a4f4a81, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4975330750594739683, guid: 67758864a5dffb745aabc8e45a4f4a81, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4975330750594739683, guid: 67758864a5dffb745aabc8e45a4f4a81, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 5610796848295165135, guid: 67758864a5dffb745aabc8e45a4f4a81, type: 3}
       propertyPath: m_PlayOnAwake

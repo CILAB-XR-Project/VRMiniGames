@@ -45,8 +45,6 @@ public class Tagger : MonoBehaviour
         StartCoroutine(PlayAudioAndRotate());
     }
     
-    // PlayAudioAndRotate Coroutine
-    // ReSharper disable Unity.PerformanceAnalysis
     private IEnumerator PlayAudioAndRotate()
     {
         while (true)
@@ -102,8 +100,9 @@ public class Tagger : MonoBehaviour
     
     private IEnumerator CheckPlayerMove(float pauseTime)
     {
-        _audioSource3.Play();
         SetAnimatorState("checking");
+        yield return new WaitForSeconds(1.0f);
+        _audioSource3.Play();
         
         float timer = 0f;
         while (timer < pauseTime)
@@ -111,6 +110,7 @@ public class Tagger : MonoBehaviour
             foreach(Animator animator in playerAnimators)
             {
                 var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
                 if (stateInfo.IsName("walking") || stateInfo.IsName("jogging") || stateInfo.IsName("running"))
                 {
                     Debug.Log("Player is moving. Tag!");
