@@ -686,6 +686,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 84379186841530561}
+  - component: {fileID: 9122438295343263047}
   - component: {fileID: 4814127461094157451}
   - component: {fileID: 4197318563892713280}
   - component: {fileID: 7076658578564576130}
@@ -713,6 +714,24 @@ Transform:
   - {fileID: 6976925864126987647}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9122438295343263047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8136338401395442538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e07466603889e648b11552b180a584d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  character_transform: {fileID: 0}
+  head_transform: {fileID: 0}
+  vr_camera_transform: {fileID: 84379186841530561}
+  ground_layer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &4814127461094157451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -805,7 +824,7 @@ MonoBehaviour:
   requestEyeTrackingPermissionOnStartup: 0
   requestScenePermissionOnStartup: 0
   _localDimming: 1
-  _trackingOriginType: 0
+  _trackingOriginType: 1
   usePositionTracking: 1
   useRotationTracking: 1
   useIPDInPositionTracking: 1

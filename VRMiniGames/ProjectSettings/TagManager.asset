@@ -6,6 +6,7 @@ TagManager:
   tags:
   - item
   - obstacle
+  - Ground
   layers:
   - Default
   - TransparentFX
@@ -13,7 +14,7 @@ TagManager:
   - Mirror
   - Water
   - UI
-  - 
+  - Grond
   - 
   - 
   - 

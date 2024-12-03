@@ -191,6 +191,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &269165174 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2037632543515951627, guid: b7a3ad942e8c58f4b9146bcff792213c, type: 3}
+  m_PrefabInstance: {fileID: 6185022458214949695}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &684859526
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,9 +252,9 @@ GameObject:
   - component: {fileID: 913977128}
   - component: {fileID: 913977127}
   - component: {fileID: 913977126}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -409,7 +414,7 @@ Canvas:
   m_GameObject: {fileID: 1387744383}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 6780520645024046704}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -574,9 +579,14 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -180, y: 143}
+  m_AnchoredPosition: {x: -186.8, y: -181.1}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!4 &1803881375 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2596745923099949727, guid: b7a3ad942e8c58f4b9146bcff792213c, type: 3}
+  m_PrefabInstance: {fileID: 6185022458214949695}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2092089313
 GameObject:
   m_ObjectHideFlags: 0
@@ -732,6 +742,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: XR_OVRCameraRig
       objectReference: {fileID: 0}
+    - target: {fileID: 9122438295343263047, guid: 615446c17691d0f4e932297fcc002489, type: 3}
+      propertyPath: head_transform
+      value: 
+      objectReference: {fileID: 1803881375}
+    - target: {fileID: 9122438295343263047, guid: 615446c17691d0f4e932297fcc002489, type: 3}
+      propertyPath: character_transform
+      value: 
+      objectReference: {fileID: 269165174}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
