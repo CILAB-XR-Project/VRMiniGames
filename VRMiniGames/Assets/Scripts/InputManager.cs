@@ -17,17 +17,6 @@ public class InputManager : MonoBehaviour
     private bool move_only_front = false;
 
 
-    public TMP_Text action_text;
-    //public Transform character;
-
-    //private void Start()
-    //{
-    //    Vector3 character_pos = character.position;
-    //    character_pos.y = 1.3f;
-    //    transform.position = character_pos;
-    //}
-
-    //Socket communication evnent listener functions
     private void OnEnable()
     {
         PythonSocketClient.OnDataReceived += UpdatePythonAction;
@@ -46,8 +35,8 @@ public class InputManager : MonoBehaviour
     void Update()
     {
         Move();
-        action_text.text = cur_action;
     }
+
 
 
     void Move()
