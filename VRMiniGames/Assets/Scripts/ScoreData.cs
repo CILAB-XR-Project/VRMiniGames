@@ -6,7 +6,7 @@ using UnityEngine;
 public class ScoreEntry
 {
     public string Player;
-    public float Score; // 플레이 시간
+    public float Score; // play time
 }
 
 [System.Serializable]

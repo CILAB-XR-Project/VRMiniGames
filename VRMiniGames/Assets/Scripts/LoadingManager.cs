@@ -4,29 +4,37 @@ using UnityEngine.SceneManagement;
 
 public class LoadingManager : MonoBehaviour
 {
-    public FadeScreen fadeScreen; // 페이드 효과를 위한 FadeScreen
-    public float waitTime = 5f;  // 로딩 화면에서 대기 시간
+    public FadeScreen fadeScreen; // FadeScreen
+    public float waitTime = 5f;  // Waiting Time in Loading
+    public AudioSource audioSource; // AudioSource for playing sound
 
     private void Start()
     {
-        StartCoroutine(LoadTargetSceneWithFade());
+        string targetSceneName = Portal.GetTargetSceneName();
+        if (targetSceneName == "Red_Green_light")
+        {
+            if (audioSource != null)
+            {
+                audioSource.Play(); // Play the audio
+            }
+        }
+        StartCoroutine(LoadTargetSceneWithFade(targetSceneName));
     }
 
-    private IEnumerator LoadTargetSceneWithFade()
+    private IEnumerator LoadTargetSceneWithFade(string targetSceneName)
     {
-        // 페이드 아웃 (화면 어두워짐)
+        // Fade In
         fadeScreen.FadeIn();
         yield return new WaitForSeconds(fadeScreen.fadeDuration);
 
-        // 대기 시간
+        // Waiting
         yield return new WaitForSeconds(waitTime);
 
-        // 페이드 인 (화면 밝아짐)
+        // Fade Out
         fadeScreen.FadeOut();
         yield return new WaitForSeconds(fadeScreen.fadeDuration);
 
-        // 목표 씬으로 전환
-        string targetSceneName = Portal.GetTargetSceneName();
+        // Go to Target Scene
         SceneManager.LoadScene(targetSceneName);
     }
 }
