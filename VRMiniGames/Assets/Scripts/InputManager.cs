@@ -46,7 +46,7 @@ public class InputManager : MonoBehaviour
     void Update()
     {
         Move();
-        action_text.text = cur_action;
+        // action_text.text = cur_action;
     }
 
 

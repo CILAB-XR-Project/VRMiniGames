@@ -28,29 +28,29 @@ public class Portal : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // 플레이어와 충돌했는지 확인
+        // Check if player collided
         if (other.CompareTag("Player"))
         {
             Debug.Log("bumped");
 
-            // 포탈 이름에 따라 이동할 씬 설정
+            // Set scene to move based on portal name
             if (gameObject.name == "Obst_Run_Portal")
             {
-                targetSceneName = "Obstacle_run"; // 첫 번째 게임 씬
+                targetSceneName = "Obstacle_run"; 
             }
             else if (gameObject.name == "GR_Light_Portal")
             {
-                targetSceneName = "Red_Green_light"; // 두 번째 게임 씬
+                targetSceneName = "Red_Green_light"; 
             }
 
-            // 로딩 씬으로 이동
+            // Move to Loading Scene
             SceneManager.LoadScene(loadingSceneName);
         }
     }
-    // 정적 메서드로 목표 씬 이름 가져오기
+    // Get target scene name with static method
     public static string GetTargetSceneName()
     {
-        return targetSceneName; // 목표 씬 이름
+        return targetSceneName; // Target Scene Name
     }
 
 }
