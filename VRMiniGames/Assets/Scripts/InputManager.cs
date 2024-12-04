@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using TMPro;
 public class InputManager : MonoBehaviour
 {
     //Moving speed
@@ -35,8 +36,8 @@ public class InputManager : MonoBehaviour
     void Update()
     {
         Move();
+        // action_text.text = cur_action;
     }
-
 
 
     void Move()
