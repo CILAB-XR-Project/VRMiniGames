@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using TMPro;
 public class InputManager : MonoBehaviour
 {
     //Moving speed
@@ -17,17 +18,6 @@ public class InputManager : MonoBehaviour
     private bool move_only_front = false;
 
 
-    public TMP_Text action_text;
-    //public Transform character;
-
-    //private void Start()
-    //{
-    //    Vector3 character_pos = character.position;
-    //    character_pos.y = 1.3f;
-    //    transform.position = character_pos;
-    //}
-
-    //Socket communication evnent listener functions
     private void OnEnable()
     {
         PythonSocketClient.OnDataReceived += UpdatePythonAction;
@@ -65,21 +55,41 @@ public class InputManager : MonoBehaviour
                 transform.position += hmd_front * speed * Time.deltaTime;
             }
         }
+
+        // move character by keyboard(for debug)
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Translate(-speed * Time.deltaTime, 0, 0);
+            Vector3 hmd_left = -hmd_transform.right;
+            hmd_left.y = 0f;
+            transform.position += hmd_left * speed * Time.deltaTime;
         }
-        else if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D))
         {
-            transform.Translate(speed * Time.deltaTime, 0, 0);
+            Vector3 hmd_right = hmd_transform.right;
+            hmd_right.y = 0f;
+            transform.position += hmd_right * speed * Time.deltaTime;
         }
-        else if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W))
         {
-            transform.Translate(0, 0, speed * Time.deltaTime);
+            Vector3 hmd_front = hmd_transform.forward;
+            hmd_front.y = 0f;
+            transform.position += hmd_front * speed * Time.deltaTime;
         }
-        else if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.S))
         {
-            transform.Translate(0, 0, -speed * Time.deltaTime);
+            Vector3 hmd_backward = -hmd_transform.forward;
+            hmd_backward.y = 0f;
+            transform.position += hmd_backward * speed * Time.deltaTime;
+        }
+
+        if (Input.GetKey(KeyCode.E)) 
+        {
+            transform.Rotate(Vector3.up, 100 * Time.deltaTime);
+        }
+
+        if (Input.GetKey(KeyCode.Q)) 
+        {
+            transform.Rotate(Vector3.up, -100 * Time.deltaTime);
         }
     }
 
