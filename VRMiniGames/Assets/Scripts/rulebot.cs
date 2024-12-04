@@ -18,6 +18,8 @@ namespace rulebot
         private float joggingSpeed = 2.0f;
         [SerializeField]
         private float runningSpeed = 3.0f;
+        [SerializeField]
+        private float squartProb = 0.95f;
 
         void Start()
         {
@@ -32,15 +34,16 @@ namespace rulebot
         
         void Update()
         {
-            if (currentMovementState == "walking")
+            var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+            if (currentMovementState == "walking" && stateInfo.IsName("walking"))
             {
                 MoveForward(walkingSpeed);
             }
-            else if (currentMovementState == "jogging")
+            else if (currentMovementState == "jogging" && stateInfo.IsName("jogging"))
             {
                 MoveForward(joggingSpeed);
             }
-            else if (currentMovementState == "running")
+            else if (currentMovementState == "running" && stateInfo.IsName("running"))
             {
                 MoveForward(runningSpeed);
             }
@@ -66,8 +69,17 @@ namespace rulebot
                 }
                 else if (stateInfo.IsName("checking"))
                 {
-                    currentMovementState = "squart";
-                    SetAnimatorState("squart");
+                    if (Random.value < squartProb)
+                    {
+                        currentMovementState = "squart";
+                        SetAnimatorState("squart");
+                    }
+                    else
+                    {
+                        string[] states = { "walking", "jogging", "running" };
+                        currentMovementState = states[Random.Range(0, states.Length)];
+                        SetAnimatorState(currentMovementState);
+                    }
                 }
 
                 yield return new WaitForSeconds(1.0f);

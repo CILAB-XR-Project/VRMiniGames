@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 public class Tagger : MonoBehaviour
 {
@@ -9,12 +11,17 @@ public class Tagger : MonoBehaviour
     private AudioSource _audioSource1;
     private AudioSource _audioSource2;
     private AudioSource _audioSource3;
+    private AudioSource _audioSource4;
     private Transform _head;
+    
+    [SerializeField]
+    private GameObject bloodEffect;
     
     public float minWaitTime = 2f;
     public float maxWaitTime = 5f;
     public float rotationSpeed = 90f;
     public float pauseAfterTurn = 1f;
+    public float pushForce = 200f;
     
     [SerializeField]
     private List<Animator> playerAnimators;
@@ -33,6 +40,7 @@ public class Tagger : MonoBehaviour
         _audioSource1 = audioSources[0];
         _audioSource2 = audioSources[1];
         _audioSource3 = audioSources[2];
+        _audioSource4 = audioSources[3];
 
         _head = transform.Find("DollHead");
         
@@ -103,23 +111,49 @@ public class Tagger : MonoBehaviour
         SetAnimatorState("checking");
         yield return new WaitForSeconds(1.0f);
         _audioSource3.Play();
-        
+    
         float timer = 0f;
+        HashSet<Animator> processedPlayers = new HashSet<Animator>();
+        Queue<Animator> soundQueue = new Queue<Animator>();
+
         while (timer < pauseTime)
         {
-            foreach(Animator animator in playerAnimators)
+            foreach (Animator animator in playerAnimators)
             {
+                if (processedPlayers.Contains(animator))
+                {
+                    continue;
+                }
+
                 var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
-                if (stateInfo.IsName("walking") || stateInfo.IsName("jogging") || stateInfo.IsName("running"))
+                if (stateInfo.IsName("idle") || stateInfo.IsName("walking") || stateInfo.IsName("jogging") || stateInfo.IsName("running"))
                 {
-                    Debug.Log("Player is moving. Tag!");
+                    Transform playerTransform = animator.transform;
+                    GameObject effect = Instantiate(bloodEffect, playerTransform.position, Quaternion.identity);
+                    Destroy(effect, 5.0f);
+
+                    Rigidbody rb = playerTransform.GetComponent<Rigidbody>();
+                    if (rb != null)
+                    {
+                        Vector3 pushDirection = -playerTransform.forward;
+                        rb.AddForce(pushDirection * pushForce, ForceMode.Impulse);
+                    }
+                    
+                    processedPlayers.Add(animator);
+                    StartCoroutine(PlaySoundWithDelay());
                 }
             }
             
             timer += Time.deltaTime;
             yield return null;
         }
+    }
+    
+    private IEnumerator PlaySoundWithDelay()
+    {
+        _audioSource4.PlayOneShot(_audioSource4.clip);
+        yield return null;
     }
     
     private void SetAnimatorState(string state)
