@@ -6,14 +6,19 @@ TagManager:
   tags:
   - item
   - obstacle
+  - RoomLight
+  - SamplesInfoPanel
+  - leftwall
+  - rightwall
+  - Ground
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Mirror
   - Water
   - UI
-  - 
+  - Ground
   - 
   - 
   - 

@@ -1,0 +1,36 @@
+{
+  "GRLightBestScore": [
+    {
+      "Player": "Bill",
+      "Score": 124.14
+    },
+    {
+      "Player": "Bob",
+      "Score": 12.32
+    },
+    {
+      "Player": "Dapper",
+      "Score": 70.0
+    },
+    {
+      "Player": "Dapper",
+      "Score": 17.00
+    },
+    {
+      "Player": "Dapper",
+      "Score": 700.0
+    },
+    {
+      "Player": "Bill",
+      "Score": 1241.4
+    },
+    {
+      "Player": "Bob",
+      "Score": 12.32
+    },
+    {
+      "Player": "Dapper",
+      "Score": 7.00
+    }
+  ]
+}
