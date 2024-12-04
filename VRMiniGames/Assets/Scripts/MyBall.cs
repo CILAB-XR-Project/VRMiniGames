@@ -2,84 +2,118 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 public class MyBall : MonoBehaviour
 {
-    
     public float Jump_power;
     bool isJump;
     public int itemcount;
-    public float velocity = 10;
     Rigidbody rigid;
+    private float forceStrength = 500f;
+    public int maxitemcount = 5;
+    public float destroyDelay = 2f;
+    public float finishDelay = 10f;
+
+    public AudioClip itemSound; // ï¿½ï¿½ï¿½ï¿½ï¿½Û¿ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½
+    public AudioClip obstacleSound; // ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½
+    private AudioSource audioSource;
+    
+
+    private InputManager inputManager;
 
     void Start()
     {
         rigid = GetComponent<Rigidbody>();
-        // rigid.velocity = Vector3.left;
-        // rigid.velocity = new Vector3(2, 4, -1);
-        // rigid.AddForce(Vector3.up * 500, ForceMode.Impulse);
-
-        
+        audioSource = GetComponent<AudioSource>();
+        inputManager = FindObjectOfType<InputManager>();
     }
+
     void Awake()
     {
-        isJump = false;
         rigid = GetComponent<Rigidbody>();
-    }
-    void Update()
-    {
-        if (Input.GetButtonDown("Jump") && !isJump)
-        {
-            isJump = true;
-            rigid.AddForce(new Vector3(0,Jump_power,0), ForceMode.Impulse);
-        }
-    }
-    
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        // rigid.velocity = new Vector3(2, 4, -1);
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
-        
-        rigid.AddForce(new Vector3(h, 0, v), ForceMode.Impulse);
-
-        // #3. È¸Àü·Â
-       //rigid.AddTorque(Vector3.left);
-    }
-    void OnCollisionEnter(Collision collision)
-    {
-       if(collision.gameObject.tag == "Floor")
-        {
-            isJump = false;
-        }
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "item")
         {
+            PlaySound(itemSound);
             other.gameObject.SetActive(false);
-            if (itemcount < 5) {
+
+            if (itemcount < maxitemcount)
+            {
                 itemcount++;
                 print(itemcount);
             }
             else
             {
-                print("Fever °ÔÀÌÁö°¡ È°¼ºÈ­µÇ¾ú½À´Ï´Ù.");
+                print("Fever has been activated.");
             }
         }
         else if (other.tag == "obstacle")
         {
-            velocity = velocity / 2;
-            print(velocity);
+            PlaySound(obstacleSound);
+            Rigidbody otherRigidbody = other.attachedRigidbody;
+            inputManager.speed = inputManager.speed / 2;
+
+            if (otherRigidbody != null)
+            {
+                otherRigidbody.isKinematic = false;
+
+                Vector3 forceDirection = (other.transform.position - transform.position).normalized;
+                otherRigidbody.AddForce(forceDirection * forceStrength);
+            }
+
+            StartCoroutine(DestroyAfterDelay(other.gameObject));
         }
         else if (other.tag == "Finish")
         {
-            print("½Ã°£");
-
-            //Game Clear!
-            SceneManager.LoadScene("Lobby");
+            StartCoroutine(WaitAndExecute());
+        }
+        else if (other.tag == "leftwall")
+        {
+            inputManager.leftwall = true; 
+        }
+        else if (other.tag == "rightwall")
+        {
+            inputManager.rightwall = true; 
         }
     }
 
+    void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "leftwall")
+        {
+            inputManager.leftwall = false; 
+        }
+        else if (other.tag == "rightwall")
+        {
+            inputManager.rightwall = false; 
+        }
+    }
+
+    private IEnumerator DestroyAfterDelay(GameObject obstacle)
+    {
+        yield return new WaitForSeconds(destroyDelay);
+
+        Destroy(obstacle);
+    }
+
+    private IEnumerator WaitAndExecute()
+    {
+
+        
+        yield return new WaitForSeconds(finishDelay);
+
+        //Game Clear!
+        SceneManager.LoadScene("Lobby");
+    }
+
+    void PlaySound(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+        {
+            audioSource.PlayOneShot(clip); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ ï¿½ï¿½ï¿½
+        }
+    }
 }

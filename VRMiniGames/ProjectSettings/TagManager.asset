@@ -6,6 +6,10 @@ TagManager:
   tags:
   - item
   - obstacle
+  - RoomLight
+  - SamplesInfoPanel
+  - leftwall
+  - rightwall
   - Ground
   layers:
   - Default
@@ -14,7 +18,7 @@ TagManager:
   - Mirror
   - Water
   - UI
-  - Grond
+  - Ground
   - 
   - 
   - 
