@@ -10,6 +10,7 @@ namespace rulebot
         private AnimationClip[] myClips;
         private Animator _animator;
         private Animator tagger_animator;
+        private Rigidbody _rb;
         
         private string currentMovementState = "idle";
         [SerializeField]
@@ -24,6 +25,7 @@ namespace rulebot
         void Start()
         {
             _animator = GetComponent<Animator>();
+            _rb = GetComponent<Rigidbody>();
             tagger_animator = GameObject.Find("Younghee").GetComponent<Animator>();
             if (_animator != null)
             {
@@ -52,7 +54,8 @@ namespace rulebot
         private void MoveForward(float speed)
         {
             Vector3 moveDirection = transform.forward * speed * Time.deltaTime;
-            transform.position += moveDirection;
+            // transform.position += moveDirection;
+            _rb.MovePosition(transform.position + moveDirection);
         }
 
         IEnumerator CheckTaggerState()

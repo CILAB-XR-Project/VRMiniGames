@@ -13,6 +13,7 @@ public class Tagger : MonoBehaviour
     private AudioSource _audioSource3;
     private AudioSource _audioSource4;
     private Transform _head;
+    private string _userAction = "walk";
     
     [SerializeField]
     private GameObject bloodEffect;
@@ -24,8 +25,26 @@ public class Tagger : MonoBehaviour
     public float pushForce = 200f;
     
     [SerializeField]
-    private List<Animator> playerAnimators;
+    private List<Animator> rulebotAnimators;
+
+    [SerializeField] 
+    private Transform userTrans;
     
+    private void OnEnable()
+    {
+        PythonSocketClient.OnDataReceived += setUserAction;
+    }
+
+    private void OnDisable()
+    {
+        PythonSocketClient.OnDataReceived -= setUserAction;
+    }
+    
+    private void setUserAction(ModelOutputData outputData)
+    {
+        _userAction = outputData.GetAction();
+    }
+
     private void Start()
     {
         _animator = GetComponent<Animator>();
@@ -44,10 +63,10 @@ public class Tagger : MonoBehaviour
 
         _head = transform.Find("DollHead");
         
-        playerAnimators = new List<Animator>();
-        foreach (var player in GameObject.FindGameObjectsWithTag("Player"))
+        rulebotAnimators = new List<Animator>();
+        foreach (var rulebot in GameObject.FindGameObjectsWithTag("Player"))
         {
-            playerAnimators.Add(player.GetComponent<Animator>());
+            rulebotAnimators.Add(rulebot.GetComponent<Animator>());
         }
         
         StartCoroutine(PlayAudioAndRotate());
@@ -114,11 +133,11 @@ public class Tagger : MonoBehaviour
     
         float timer = 0f;
         HashSet<Animator> processedPlayers = new HashSet<Animator>();
-        Queue<Animator> soundQueue = new Queue<Animator>();
+        Boolean processedUser = false;
 
         while (timer < pauseTime)
         {
-            foreach (Animator animator in playerAnimators)
+            foreach (Animator animator in rulebotAnimators)
             {
                 if (processedPlayers.Contains(animator))
                 {
@@ -136,13 +155,29 @@ public class Tagger : MonoBehaviour
                     Rigidbody rb = playerTransform.GetComponent<Rigidbody>();
                     if (rb != null)
                     {
-                        Vector3 pushDirection = -playerTransform.forward;
+                        Vector3 pushDirection = Vector3.forward;
                         rb.AddForce(pushDirection * pushForce, ForceMode.Impulse);
                     }
                     
                     processedPlayers.Add(animator);
                     StartCoroutine(PlaySoundWithDelay());
                 }
+            }
+            
+            if ((_userAction == "walk" || _userAction == "others") && !processedUser)
+            {
+                GameObject effect = Instantiate(bloodEffect, userTrans.position, Quaternion.identity);
+                Destroy(effect, 5.0f);
+                    
+                Rigidbody rb = userTrans.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    Vector3 pushDirection = Vector3.forward;
+                    rb.AddForce(pushDirection * pushForce, ForceMode.Impulse);
+                }
+                    
+                processedUser = true;
+                StartCoroutine(PlaySoundWithDelay());
             }
             
             timer += Time.deltaTime;
