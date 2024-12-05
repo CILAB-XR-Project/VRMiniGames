@@ -286,6 +286,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63909cce11a05db429c446bd38fc5d15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerName: Player1
+  miniGameScore: 0
   obstPlayerTexts:
   - {fileID: 1469239165}
   - {fileID: 240671415}
@@ -322,7 +324,6 @@ MonoBehaviour:
   - {fileID: 1672276337}
   - {fileID: 1013618986}
   - {fileID: 1379059632}
-  player: Player1
 --- !u!4 &55665838
 Transform:
   m_ObjectHideFlags: 0
