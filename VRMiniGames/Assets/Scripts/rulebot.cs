@@ -10,6 +10,7 @@ namespace rulebot
         private AnimationClip[] myClips;
         private Animator _animator;
         private Animator tagger_animator;
+        private Rigidbody _rb;
         
         private string currentMovementState = "idle";
         [SerializeField]
@@ -18,10 +19,13 @@ namespace rulebot
         private float joggingSpeed = 2.0f;
         [SerializeField]
         private float runningSpeed = 3.0f;
+        [SerializeField]
+        private float squartProb = 0.95f;
 
         void Start()
         {
             _animator = GetComponent<Animator>();
+            _rb = GetComponent<Rigidbody>();
             tagger_animator = GameObject.Find("Younghee").GetComponent<Animator>();
             if (_animator != null)
             {
@@ -32,15 +36,16 @@ namespace rulebot
         
         void Update()
         {
-            if (currentMovementState == "walking")
+            var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+            if (currentMovementState == "walking" && stateInfo.IsName("walking"))
             {
                 MoveForward(walkingSpeed);
             }
-            else if (currentMovementState == "jogging")
+            else if (currentMovementState == "jogging" && stateInfo.IsName("jogging"))
             {
                 MoveForward(joggingSpeed);
             }
-            else if (currentMovementState == "running")
+            else if (currentMovementState == "running" && stateInfo.IsName("running"))
             {
                 MoveForward(runningSpeed);
             }
@@ -49,7 +54,8 @@ namespace rulebot
         private void MoveForward(float speed)
         {
             Vector3 moveDirection = transform.forward * speed * Time.deltaTime;
-            transform.position += moveDirection;
+            // transform.position += moveDirection;
+            _rb.MovePosition(transform.position + moveDirection);
         }
 
         IEnumerator CheckTaggerState()
@@ -58,16 +64,25 @@ namespace rulebot
             {
                 var stateInfo = tagger_animator.GetCurrentAnimatorStateInfo(0);
 
-                if (stateInfo.IsName("idle") || stateInfo.IsName("singing"))
+                if (stateInfo.IsName("idle") || stateInfo.IsName("singing") || stateInfo.IsName("turning"))
                 {
                     string[] states = { "walking", "jogging", "running" };
                     currentMovementState = states[Random.Range(0, states.Length)];
                     SetAnimatorState(currentMovementState);
                 }
-                else if (stateInfo.IsName("turning"))
+                else if (stateInfo.IsName("checking"))
                 {
-                    currentMovementState = "squart";
-                    SetAnimatorState("squart");
+                    if (Random.value < squartProb)
+                    {
+                        currentMovementState = "squart";
+                        SetAnimatorState("squart");
+                    }
+                    else
+                    {
+                        string[] states = { "walking", "jogging", "running" };
+                        currentMovementState = states[Random.Range(0, states.Length)];
+                        SetAnimatorState(currentMovementState);
+                    }
                 }
 
                 yield return new WaitForSeconds(1.0f);
