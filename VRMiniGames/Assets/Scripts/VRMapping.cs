@@ -9,6 +9,7 @@ public class VRMap
     public Transform ik_target;
     public Vector3 tracking_pos_offset;
     public Vector3 tracking_rotation_offset;
+
     public void Map()
     {
         ik_target.position = vr_target.TransformPoint(tracking_pos_offset);
@@ -23,6 +24,7 @@ public class VRMap
     public VRMap head;
     public VRMap left_hand;
     public VRMap right_hand;
+    public InitializePosition init_position;
 
     public Vector3 head_body_pos_offset;
     public float head_body_yaw_offset;
@@ -39,7 +41,6 @@ public class VRMap
     {
         //Update body Transform
         Vector3 character_pos = head.ik_target.position + head_body_pos_offset;
-        //character_pos.y = 0.0f;
         transform.position = character_pos;
         float yaw = head.vr_target.eulerAngles.y;
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.eulerAngles.x, yaw, transform.eulerAngles.z), turn_smoothness);

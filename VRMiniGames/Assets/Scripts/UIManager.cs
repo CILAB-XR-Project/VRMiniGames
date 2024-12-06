@@ -14,8 +14,8 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        cur_action = "others";
-        prev_action = "others";
+        cur_action = "";
+        prev_action = "";
     }
     void UpdatePythonAction(ModelOutputData data)
     {

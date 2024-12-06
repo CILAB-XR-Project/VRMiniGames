@@ -162,7 +162,7 @@ public class PoseMapping : MonoBehaviour
     {
         for (int i = 0; i < python_model_keypoints.Length; i++)
         {   
-            pose_maps[i].Map(python_model_keypoints[i], this.transform);
+            pose_maps[i].Map(python_model_keypoints[i], this.transform, 0.0f);
         }
     }
 
