@@ -6,7 +6,13 @@ TagManager:
   tags:
   - item
   - obstacle
+  - RoomLight
+  - SamplesInfoPanel
+  - leftwall
+  - rightwall
   - Ground
+  - user
+  - wall
   layers:
   - Default
   - TransparentFX
@@ -14,7 +20,7 @@ TagManager:
   - Mirror
   - Water
   - UI
-  - Grond
+  - Ground
   - 
   - 
   - 

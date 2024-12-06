@@ -12,16 +12,16 @@ public class DisplayBestScores : MonoBehaviour
         Transform lightParent = transform.Find("GR_Light_Board/GR_UI");
         if (obstParent == null)
         {
-            Debug.LogError("Obst_Run_UI를 찾을 수 없습니다!");
+            Debug.LogError("Can't not find Obst_Run_UI!");
             return;
         }
 
         if (lightParent == null)
         {
-            Debug.LogError("GR_UI를 찾을 수 없습니다!");
+            Debug.LogError("Can't not find GR_UI!");
             return;
         }
-        // ObstBestScore 텍스트 배열 초기화
+        // Initialize ObstBestScore List 
         TMP_Text[] obstPlayerTexts = new TMP_Text[8];
         TMP_Text[] obstScoreTexts = new TMP_Text[8];
 
@@ -31,7 +31,7 @@ public class DisplayBestScores : MonoBehaviour
             obstScoreTexts[i] = obstParent.Find($"ObstScore{i + 1}").GetComponent<TMP_Text>();
         }
 
-        // GBLightBestScore 텍스트 배열 초기화
+        // Initialize GBLightBestScore List 
         TMP_Text[] lightPlayerTexts = new TMP_Text[8];
         TMP_Text[] lightScoreTexts = new TMP_Text[8];
 
@@ -41,32 +41,32 @@ public class DisplayBestScores : MonoBehaviour
             lightScoreTexts[i] = lightParent.Find($"GRLightScore{i + 1}").GetComponent<TMP_Text>();
         }
 
-        // JSON 파일별로 텍스트 업데이트
+        // Update text by JSON file
         LoadAndDisplayScores("ObstBestScore", obstPlayerTexts, obstScoreTexts, true);
         LoadAndDisplayScores("GRLightBestScore", lightPlayerTexts, lightScoreTexts, false);
     }
 
         private void LoadAndDisplayScores(string fileName, TMP_Text[] playerTexts, TMP_Text[] scoreTexts, bool isObstacle)
     {
-        // JSON 파일 로드 및 처리
+        // JSON file load and processing
         TextAsset jsonFile = Resources.Load<TextAsset>($"Score/{fileName}");
         if (jsonFile == null)
         {
-            Debug.LogError($"JSON 파일 {fileName}을 찾을 수 없습니다!");
+            Debug.LogError($"Can't not find  JSON file: {fileName}!");
             return;
         }
 
         BestScoreData scoreData = JsonUtility.FromJson<BestScoreData>(jsonFile.text);
         if (scoreData == null)
         {
-            Debug.LogError($"JSON 데이터를 변환할 수 없습니다. 파일 이름: {fileName}");
+            Debug.LogError($"JSON data cannot be converted. file name : {fileName}");
             return;
         }
         ScoreEntry[] scores = isObstacle ? scoreData.ObstBestScore : scoreData.GRLightBestScore;
         if (scores == null || scores.Length == 0)
         {
-            Debug.LogError($"점수 데이터가 비어 있습니다. 파일 이름: {fileName}, isObstacle: {isObstacle}");
-            scores = new ScoreEntry[0]; // 기본값으로 빈 배열 설정
+            Debug.LogError($"Score data is empty. file name: {fileName}, isObstacle: {isObstacle}");
+            scores = new ScoreEntry[0]; // empty list
         }
         var sortedScores = scores
             .OrderBy(entry => entry.Score)
