@@ -21,6 +21,7 @@ public class MyBall : MonoBehaviour
     public bool finishline = false;
     private InputManager inputManager;
     public UIManager UIManager;
+    private GameSave gamesave;
 
     void Start()
     {
@@ -30,6 +31,7 @@ public class MyBall : MonoBehaviour
         UIManager = FindObjectOfType<UIManager>();
         UIManager.StartFeverUI();
         UIManager.StartGameTimerUI();
+        gamesave = GetComponent<GameSave>();
     }
 
     void Awake()
@@ -74,6 +76,11 @@ public class MyBall : MonoBehaviour
         else if (other.tag == "Finish")
         {
             StartCoroutine(WaitAndExecute());
+            float last_time = UIManager.GetGameTime();
+            print(last_time);
+
+            gamesave.miniGameScore = last_time;
+            gamesave.SaveScore("ObstBestScore", true); // ObstBestScore에 저장
         }
         else if (other.tag == "leftwall")
         {
@@ -109,10 +116,7 @@ public class MyBall : MonoBehaviour
         finishline = true;
         UIManager.EndFeverUI();
         UIManager.EndGameTimer();
-        float last_time = UIManager.GetGameTime();
-
-        GameManager.Instance.miniGameScore = last_time;
-        GameManager.Instance.SaveScore("ObstBestScore", true); // GRLightBestScore에 저장
+        
         yield return new WaitForSeconds(finishDelay);
 
         //Game Clear!
