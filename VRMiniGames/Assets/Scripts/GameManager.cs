@@ -91,15 +91,23 @@ public class GameManager : MonoBehaviour
             Debug.Log($"Score is zero or less. Skipping save for {playerName}.");
             return;
         }
-
+        // save as JSON file
+        string directoryPath = Path.Combine(Application.persistentDataPath, $"Resources/Score/{fileName}.json");
+        string filePath = Path.Combine(directoryPath, $"{fileName}.json");
         // load json file
-        TextAsset jsonFile = Resources.Load<TextAsset>($"Score/{fileName}");
+        // TextAsset jsonFile = Resources.Load<TextAsset>($"Score/{fileName}");
         BestScoreData scoreData = new BestScoreData();
-
-        if (jsonFile != null) 
-        { 
-            scoreData = JsonUtility.FromJson<BestScoreData>(jsonFile.text);
+        if (File.Exists(filePath))
+        {
+            string jsonData = File.ReadAllText(filePath); // JSON 파일 읽기
+            scoreData = JsonUtility.FromJson<BestScoreData>(jsonData);
         }
+        // 디렉토리가 없는 경우 생성
+        if (!Directory.Exists(directoryPath))
+        {
+            Directory.CreateDirectory(directoryPath);
+        }
+        
 
         // save new score data
         if (isObstacle)
@@ -114,12 +122,17 @@ public class GameManager : MonoBehaviour
             scoreList.Add(new ScoreEntry { Player = playerName, Score = miniGameScore });
             scoreData.GRLightBestScore = scoreList.ToArray();
         }
-        // save as JSON file
-        string filePath = Path.Combine(Application.dataPath, $"Resources/Score/{fileName}.json");
-        string jsonData = JsonUtility.ToJson(scoreData, true);
-        File.WriteAllText(filePath, jsonData);
+        string updatedJsonData = JsonUtility.ToJson(scoreData, true);
+        File.WriteAllText(filePath, updatedJsonData);
 
         Debug.Log($"Score saved for {playerName} in {fileName}.json.");
+    }
+    public void StopLobbyMusic()
+    {
+        if (audio_lobby != null && audio_lobby.isPlaying)
+        {
+            audio_lobby.Stop();
+        }
     }
 
 }

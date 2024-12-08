@@ -109,6 +109,7 @@ public class UIManager : MonoBehaviour
             float seconds = elapsed % 60f;
 
             gamer_timer_text.text = string.Format("{0:00}:{1:00.0}", minutes, seconds);
+            elapsed_time = elapsed;
         }
     }
 

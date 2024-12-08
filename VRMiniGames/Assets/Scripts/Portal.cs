@@ -32,7 +32,10 @@ public class Portal : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("bumped");
-
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.StopLobbyMusic();
+            }
             // Set scene to move based on portal name
             if (gameObject.name == "Obst_Run_Portal")
             {
