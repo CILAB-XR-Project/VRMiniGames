@@ -109,7 +109,10 @@ public class MyBall : MonoBehaviour
         finishline = true;
         UIManager.EndFeverUI();
         UIManager.EndGameTimer();
-        
+        float last_time = UIManager.GetGameTime();
+
+        GameManager.Instance.miniGameScore = last_time;
+        GameManager.Instance.SaveScore("ObstBestScore", true); // GRLightBestScore에 저장
         yield return new WaitForSeconds(finishDelay);
 
         //Game Clear!
