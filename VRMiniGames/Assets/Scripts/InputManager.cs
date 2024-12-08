@@ -2,7 +2,6 @@ using Oculus.Interaction.Input;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using UnityEngine.SceneManagement;
 
 public class InputManager : MonoBehaviour
@@ -12,6 +11,7 @@ public class InputManager : MonoBehaviour
 
     //Currnet action from tactile
     private string cur_action;
+    private string lunge_direction = "";
 
     // Variables for moving direction
     public Transform hmd_transform;
@@ -32,17 +32,14 @@ public class InputManager : MonoBehaviour
     public float maxForwardSpeed = 4;
     private string currentSceneName = "";
 
-    public TMP_Text action_text;
+    public UIManager uiManager;
+
     //public Transform character;
 
     private void Start()
     {
         myBall = FindObjectOfType<MyBall>();
        currentSceneName = SceneManager.GetActiveScene().name;
-
-        //    Vector3 character_pos = character.position;
-        //    character_pos.y = 1.3f;
-        //    transform.position = character_pos;
     }
 
     //Socket communication evnent listener functions
@@ -59,19 +56,32 @@ public class InputManager : MonoBehaviour
     {
         this.cur_action = data.GetAction();
         print($"Action: {cur_action}");
+        if(this.cur_action == "lunge")
+        {
+            Vector3 forward = transform.forward;
+            Vector3[] foot_kps = data.GetKeypoints();
+
+            float left_proj = Vector3.Dot((foot_kps[0] - transform.position), forward);
+            float right_proj = Vector3.Dot((foot_kps[1] - transform.position), forward);
+
+            if (left_proj > right_proj)
+                lunge_direction = "left";
+            else 
+                lunge_direction = "right";
+        }
     }
 
     void Update()
     {
         if (currentSceneName == "Obstacle_run") Obstacle_Move();
         else Move();
-        // action_text.text = cur_action;
     }
 
     void Obstacle_Move()
     {
         if (cur_action == "walk")
         {
+            // move forward direction
             if (move_only_front)
             {
                 transform.position = front_direction * speed * Time.deltaTime;
@@ -83,9 +93,26 @@ public class InputManager : MonoBehaviour
                 transform.position += hmd_front * speed * Time.deltaTime;
             }
         }
+        else if (cur_action == "lunge") 
+        { 
+            if(lunge_direction == "left")
+            {
+                //left lunge action
+            }
+            else
+            {
+                //right lunge action
+
+            }
+        }
+
+
+
+
         if (Input.GetKey(KeyCode.P) && myBall.itemcount == myBall.maxitemcount)
         {
             myBall.itemcount = 0;
+            uiManager.TriggerFever();
             StartCoroutine(FevertDelay());
         }
 

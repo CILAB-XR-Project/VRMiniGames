@@ -70,7 +70,7 @@ public class FootMapping : MonoBehaviour
     // mapping keypoints to IK target
     private void ApplyPythonKeypoints()
     {
-        float ground_y = init_position.GetGroundY()+0.12f;
+        float ground_y = init_position.GetGroundY() + 0.12f; //add ankle y position
         left_foot.Map(python_model_keypoints[0], this.transform, ground_y);
         right_foot.Map(python_model_keypoints[1], this.transform, ground_y);
     }
