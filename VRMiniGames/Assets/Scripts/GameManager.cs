@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text[] GRLightPlayerTexts => grlightPlayerTexts;
     public TMP_Text[] GRLightScoreTexts => grlightScoreTexts;
     //[SerializeField] private string playerName = "Player1"; // Default value: "Player1"
-   
+    public AudioSource audio_lobby;
     private void Awake()
     {
         // Singleton setup
@@ -36,6 +36,10 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        if (audio_lobby != null)
+        {
+            audio_lobby.Play(); // Play the audio
+        }
         // ObstBestScore 
         obstPlayerTexts = FindTexts("ObstPlayer", 8); // "ObstPlayer1" ~ "ObstPlayer8"
         obstScoreTexts = FindTexts("ObstScore", 8);   // "ObstScore1" ~ "ObstScore8"
