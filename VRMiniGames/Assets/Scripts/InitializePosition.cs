@@ -12,6 +12,8 @@ public class InitializePosition : MonoBehaviour
     public LayerMask ground_layer;
     private Vector3 ground_pos;
 
+    public bool initialize_finish = false;
+
     private void UpdateGroundY()
     {
         RaycastHit ground_hit;
@@ -46,10 +48,19 @@ public class InitializePosition : MonoBehaviour
 
     public float GetGroundY() { return ground_pos.y; }
 
+    private void Update()
+    {
+        if ( !initialize_finish)
+        {
+
+            AdjustCharacterPos();
+            AdjustVRCamPos();
+            initialize_finish = true;
+        }
+    }
+
     private void Start()
     {
         UpdateGroundY();
-        AdjustCharacterPos();
-        AdjustVRCamPos();
     }
 }
