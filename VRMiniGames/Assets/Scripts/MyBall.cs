@@ -14,18 +14,22 @@ public class MyBall : MonoBehaviour
     public float destroyDelay = 2f;
     public float finishDelay = 10f;
 
-    public AudioClip itemSound; // �����ۿ� �ε����� �� ����� ����� Ŭ��
-    public AudioClip obstacleSound; // ��ֹ��� �ε����� �� ����� ����� Ŭ��
+    public AudioClip itemSound; 
+    public AudioClip obstacleSound; 
     private AudioSource audioSource;
-    
 
+    public bool finishline = false;
     private InputManager inputManager;
+    public UIManager UIManager;
 
     void Start()
     {
         rigid = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
         inputManager = FindObjectOfType<InputManager>();
+        UIManager = FindObjectOfType<UIManager>();
+        UIManager.StartFeverUI();
+        UIManager.StartGameTimerUI();
     }
 
     void Awake()
@@ -43,6 +47,7 @@ public class MyBall : MonoBehaviour
             if (itemcount < maxitemcount)
             {
                 itemcount++;
+                UIManager.SetFeverItemCnt(itemcount);
                 print(itemcount);
             }
             else
@@ -101,7 +106,9 @@ public class MyBall : MonoBehaviour
 
     private IEnumerator WaitAndExecute()
     {
-
+        finishline = true;
+        UIManager.EndFeverUI();
+        UIManager.EndGameTimer();
         
         yield return new WaitForSeconds(finishDelay);
 

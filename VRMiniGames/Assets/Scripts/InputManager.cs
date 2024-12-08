@@ -95,14 +95,19 @@ public class InputManager : MonoBehaviour
         }
         else if (cur_action == "lunge") 
         { 
-            if(lunge_direction == "left")
+            if(lunge_direction == "left" && !leftwall)
             {
                 //left lunge action
+                Vector3 hmd_left = -hmd_transform.right;
+                hmd_left.y = 0f;
+                transform.position += hmd_left * speed * Time.deltaTime;
             }
-            else
+            else if (!rightwall)
             {
                 //right lunge action
-
+                Vector3 hmd_right = hmd_transform.right;
+                hmd_right.y = 0f;
+                transform.position += hmd_right * speed * Time.deltaTime;
             }
         }
 
@@ -118,14 +123,31 @@ public class InputManager : MonoBehaviour
 
         if (Input.GetKey(KeyCode.A) && !leftwall)
         {
-            transform.Translate(-speed * Time.deltaTime, 0, 0);
+            Vector3 hmd_left = -hmd_transform.right;
+            hmd_left.y = 0f;
+            transform.position += hmd_left * speed * Time.deltaTime;
         }
         else if (Input.GetKey(KeyCode.D) && !rightwall)
         {
-            transform.Translate(speed * Time.deltaTime, 0, 0);
+            Vector3 hmd_right = hmd_transform.right;
+            hmd_right.y = 0f;
+            transform.position += hmd_right * speed * Time.deltaTime;
         }
 
-        if (Input.GetKey(KeyCode.W))
+        if (myBall.finishline)
+        {
+            if (speed > 0)
+            {
+                speed -= deceleration * Time.deltaTime;
+                if (speed < 0) speed = 0;
+            }
+            else if (speed < 0)
+            {
+                speed += deceleration * Time.deltaTime;
+                if (speed > 0) speed = 0;
+            }
+        }
+        else if (Input.GetKey(KeyCode.W))
         {
             if (!Fevertime)
                 if (speed > maxForwardSpeed) speed -= deceleration * Time.deltaTime;
@@ -149,9 +171,21 @@ public class InputManager : MonoBehaviour
                 if (speed > 0) speed = 0;
             }
         }
+        if (Input.GetKey(KeyCode.E))
+        {
+            transform.Rotate(Vector3.up, 100 * Time.deltaTime);
+        }
+
+        if (Input.GetKey(KeyCode.Q))
+        {
+            transform.Rotate(Vector3.up, -100 * Time.deltaTime);
+        }
         Vector3 forwardDirection = transform.forward;
         forwardDirection.y = 0f;
+        if (leftwall && forwardDirection.x < 0) forwardDirection.x = 0f;
+        if (rightwall && forwardDirection.x > 0) forwardDirection.x = 0f;
         transform.position += forwardDirection * speed * Time.deltaTime;
+
     }
 
     void Move()

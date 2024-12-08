@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: a2c7e10f2a568b74fa3f0900a84c2f56, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -286,8 +286,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63909cce11a05db429c446bd38fc5d15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerName: Player1
-  miniGameScore: 0
   obstPlayerTexts:
   - {fileID: 1469239165}
   - {fileID: 240671415}
@@ -324,6 +322,7 @@ MonoBehaviour:
   - {fileID: 1672276337}
   - {fileID: 1013618986}
   - {fileID: 1379059632}
+  player: Player1
 --- !u!4 &55665838
 Transform:
   m_ObjectHideFlags: 0
@@ -5333,6 +5332,10 @@ PrefabInstance:
     - target: {fileID: 8136338401395442538, guid: 615446c17691d0f4e932297fcc002489, type: 3}
       propertyPath: m_TagString
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 9122438295343263047, guid: 615446c17691d0f4e932297fcc002489, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
