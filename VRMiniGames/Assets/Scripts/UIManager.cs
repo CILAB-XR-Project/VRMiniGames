@@ -39,10 +39,9 @@ public class UIManager : MonoBehaviour
 
         elapsed_time = 0.0f;
         start_time = 0.0f;
-        fever_item_text.gameObject.SetActive(false);
-        gamer_timer_text.gameObject.SetActive(false);
-        fever_item_text.gameObject.SetActive(false);
-        fever_ready_icon.gameObject.SetActive(false);
+        //gamer_timer_text.gameObject.SetActive(false);
+        //fever_item_text.gameObject.SetActive(false);
+        //fever_ready_icon.gameObject.SetActive(false);
 
     }
 
