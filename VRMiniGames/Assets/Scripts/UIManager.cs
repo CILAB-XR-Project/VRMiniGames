@@ -17,8 +17,8 @@ public class UIManager : MonoBehaviour
 
     //game timer vars
     private bool is_game_timer_UI = false;
-    private float start_time = 0f;
-    private const float updateInterval = 0.1f;
+    private float start_time;
+    private float elapsed_time;
     public TextMeshProUGUI gamer_timer_text;
 
     //fever vars
@@ -36,7 +36,14 @@ public class UIManager : MonoBehaviour
         cur_action = "";
         prev_action = "";
         currentSceneName = SceneManager.GetActiveScene().name;
-        gamer_timer_text.enabled = false;
+
+        elapsed_time = 0.0f;
+        start_time = 0.0f;
+        fever_item_text.gameObject.SetActive(false);
+        gamer_timer_text.gameObject.SetActive(false);
+        fever_item_text.gameObject.SetActive(false);
+        fever_ready_icon.gameObject.SetActive(false);
+
     }
 
     void UpdatePythonAction(ModelOutputData data)
@@ -109,8 +116,9 @@ public class UIManager : MonoBehaviour
     public void EndGameTimer()
     {
         is_game_timer_UI = false;
-        gamer_timer_text.gameObject.SetActive(false);
     }
+
+    public float GetGameTime() { return elapsed_time; }
 
     //fever ui function
     public void StartFeverUI()
