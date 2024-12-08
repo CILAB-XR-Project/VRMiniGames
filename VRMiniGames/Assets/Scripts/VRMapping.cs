@@ -29,11 +29,10 @@ public class VRMap
     public Vector3 head_body_pos_offset;
     public float head_body_yaw_offset;
 
-
-
     void LateUpdate()
     {
-        UpdateVRKeypoints();
+        if(init_position.initialize_finish)
+            UpdateVRKeypoints();
     }
 
 

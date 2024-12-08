@@ -31,7 +31,6 @@ Transform:
   m_Children:
   - {fileID: 2585907105874092521}
   - {fileID: 5613111278501434726}
-  - {fileID: 6799944508444120986}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &924167311243528008
@@ -51,7 +50,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3293323660359921373
 RectTransform:
   m_ObjectHideFlags: 0
@@ -185,7 +184,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4647329902462187330
 RectTransform:
   m_ObjectHideFlags: 0
@@ -249,11 +248,15 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 4193229961268270503}
+    m_TransformParent: {fileID: 5613111278501434726}
     m_Modifications:
     - target: {fileID: 1741307287001265985, guid: 7b798a297ca2b7c41a6a102dc8945e80, type: 3}
       propertyPath: m_Name
       value: Game Timer
+      objectReference: {fileID: 0}
+    - target: {fileID: 1741307287001265985, guid: 7b798a297ca2b7c41a6a102dc8945e80, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2129341542013273216, guid: 7b798a297ca2b7c41a6a102dc8945e80, type: 3}
       propertyPath: _trackedObject
@@ -285,7 +288,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8249913862830090365, guid: 7b798a297ca2b7c41a6a102dc8945e80, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.39999998
       objectReference: {fileID: 0}
     - target: {fileID: 8249913862830090365, guid: 7b798a297ca2b7c41a6a102dc8945e80, type: 3}
       propertyPath: m_LocalPosition.z
@@ -318,6 +321,14 @@ PrefabInstance:
     - target: {fileID: 8249913862830090365, guid: 7b798a297ca2b7c41a6a102dc8945e80, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9181673240082369347, guid: 7b798a297ca2b7c41a6a102dc8945e80, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 1.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 9181673240082369347, guid: 7b798a297ca2b7c41a6a102dc8945e80, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.61
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -584,6 +595,10 @@ PrefabInstance:
       propertyPath: action_text
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 7076658578564576130, guid: 615446c17691d0f4e932297fcc002489, type: 3}
+      propertyPath: _trackingOriginType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8136338401395442538, guid: 615446c17691d0f4e932297fcc002489, type: 3}
       propertyPath: m_Name
       value: XR_OVRCameraRig
@@ -598,7 +613,10 @@ PrefabInstance:
       objectReference: {fileID: 2585907105874092521}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 84379186841530561, guid: 615446c17691d0f4e932297fcc002489, type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 6799944508444120986}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 615446c17691d0f4e932297fcc002489, type: 3}
 --- !u!4 &1513281579094725763 stripped
