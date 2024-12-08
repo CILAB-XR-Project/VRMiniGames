@@ -6274,6 +6274,20 @@ MonoBehaviour:
   obstacleSound: {fileID: 8300000, guid: 17fe35ce980ef4d26b6aa57295f97cb5, type: 3}
   finishline: 0
   UIManager: {fileID: 0}
+--- !u!114 &607356168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 607356159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a08c95849831de241b55c61b2262350f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName: Player1
+  miniGameScore: 0
 --- !u!1001 &612847712
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17292,6 +17306,9 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2929921838332574547, guid: d5bdafaa08a4d29449d32e2cf7819429, type: 3}
       insertIndex: 4
+      addedObject: {fileID: 607356168}
+    - targetCorrespondingSourceObject: {fileID: 2929921838332574547, guid: d5bdafaa08a4d29449d32e2cf7819429, type: 3}
+      insertIndex: 5
       addedObject: {fileID: 607356167}
     - targetCorrespondingSourceObject: {fileID: 2929921838332574547, guid: d5bdafaa08a4d29449d32e2cf7819429, type: 3}
       insertIndex: -1
