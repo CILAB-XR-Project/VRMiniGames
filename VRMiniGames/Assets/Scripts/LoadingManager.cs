@@ -6,16 +6,24 @@ public class LoadingManager : MonoBehaviour
 {
     public FadeScreen fadeScreen; // FadeScreen
     public float waitTime = 5f;  // Waiting Time in Loading
-    public AudioSource audioSource; // AudioSource for playing sound
-
+    public AudioSource audioSource1; // AudioSource for playing sound
+    public AudioSource audioSource2;
     private void Start()
     {
         string targetSceneName = Portal.GetTargetSceneName();
         if (targetSceneName == "Red_Green_light")
         {
-            if (audioSource != null)
+            if (audioSource1 != null)
             {
-                audioSource.Play(); // Play the audio
+                audioSource1.Play(); // Play the audio
+            }
+        }
+        else if (targetSceneName == "Obstacle_run")
+        {
+            if (audioSource2 != null) 
+            {
+                audioSource2.Play(); // Play the audio
+
             }
         }
         StartCoroutine(LoadTargetSceneWithFade(targetSceneName));
