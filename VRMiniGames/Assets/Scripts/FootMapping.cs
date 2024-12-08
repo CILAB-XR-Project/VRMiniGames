@@ -9,10 +9,13 @@ public class PoseMap
     public Transform IK_target;
     public Vector3 tracking_pos_offset;
     public Vector3 tracking_rotation_offset;
-    public void Map(Vector3 pose_target, Transform character_transform)
+
+
+    public void Map(Vector3 pose_target, Transform character_transform, float ground_y)
     {   
+    
         Vector3 character_pos = character_transform.position;
-        character_pos.y = 0.0f;
+        character_pos.y = ground_y;
 
         Vector3 world_pose_target = character_pos + character_transform.rotation * pose_target;
 
@@ -31,6 +34,7 @@ public class FootMapping : MonoBehaviour
     //Tactile, Keypoint mapping class
     public PoseMap left_foot;
     public PoseMap right_foot;
+    public InitializePosition init_position;
 
 
     private void Start()
@@ -38,6 +42,7 @@ public class FootMapping : MonoBehaviour
         python_model_keypoints = new Vector3[2];
 
     }
+    
 
     private void LateUpdate()
     {
@@ -65,7 +70,8 @@ public class FootMapping : MonoBehaviour
     // mapping keypoints to IK target
     private void ApplyPythonKeypoints()
     {
-        left_foot.Map(python_model_keypoints[0], this.transform);
-        right_foot.Map(python_model_keypoints[1], this.transform);
+        float ground_y = init_position.GetGroundY() + 0.12f; //add ankle y position
+        left_foot.Map(python_model_keypoints[0], this.transform, ground_y);
+        right_foot.Map(python_model_keypoints[1], this.transform, ground_y);
     }
 }

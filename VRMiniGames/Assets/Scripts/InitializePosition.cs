@@ -10,17 +10,15 @@ public class InitializePosition : MonoBehaviour
     public Transform vr_camera_transform;
 
     public LayerMask ground_layer;
+    private Vector3 ground_pos;
 
-
-    private void AdjustCharacterPos()
+    private void UpdateGroundY()
     {
         RaycastHit ground_hit;
-        
+
         if (Physics.Raycast(character_transform.position, Vector3.down, out ground_hit, Mathf.Infinity, ground_layer))
         {
-            Vector3 character_pos = character_transform.position;
-            character_pos.y = ground_hit.point.y;
-            character_transform.position = character_pos;
+            ground_pos = ground_hit.point;
 
             Debug.Log($"Character adjusted to ground: {ground_hit.point}");
         }
@@ -28,6 +26,13 @@ public class InitializePosition : MonoBehaviour
         {
             Debug.LogWarning("No ground detected below character's foot.");
         }
+
+    }
+    private void AdjustCharacterPos()
+    {
+        Vector3 character_pos = character_transform.position;
+        character_pos.y = ground_pos.y;
+        character_transform.position = character_pos;
     }
 
     private void AdjustVRCamPos()
@@ -39,8 +44,11 @@ public class InitializePosition : MonoBehaviour
         Debug.Log($"VR Camera adjusted to head position: {head_transform.position}");
     }
 
+    public float GetGroundY() { return ground_pos.y; }
+
     private void Start()
     {
+        UpdateGroundY();
         AdjustCharacterPos();
         AdjustVRCamPos();
     }
