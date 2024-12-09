@@ -17252,6 +17252,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1009149299063867692, guid: d5bdafaa08a4d29449d32e2cf7819429, type: 3}
+      propertyPath: Fever_velocity
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1009149299063867692, guid: d5bdafaa08a4d29449d32e2cf7819429, type: 3}
+      propertyPath: maxForwardSpeed
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1556484541208373922, guid: d5bdafaa08a4d29449d32e2cf7819429, type: 3}
       propertyPath: m_IsActive
       value: 0
