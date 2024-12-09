@@ -79,61 +79,6 @@ public class InputManager : MonoBehaviour
 
     void Obstacle_Move()
     {
-        if (cur_action == "walk")
-        {
-            // move forward direction
-            if (move_only_front)
-            {
-                transform.position = front_direction * speed * Time.deltaTime;
-            }
-            else
-            {
-                Vector3 hmd_front = hmd_transform.forward;
-                hmd_front.y = 0f;
-                transform.position += hmd_front * speed * Time.deltaTime;
-            }
-        }
-        else if (cur_action == "lunge") 
-        { 
-            if(lunge_direction == "left" && !leftwall)
-            {
-                //left lunge action
-                Vector3 hmd_left = -hmd_transform.right;
-                hmd_left.y = 0f;
-                transform.position += hmd_left * speed * Time.deltaTime;
-            }
-            else if (!rightwall)
-            {
-                //right lunge action
-                Vector3 hmd_right = hmd_transform.right;
-                hmd_right.y = 0f;
-                transform.position += hmd_right * speed * Time.deltaTime;
-            }
-        }
-
-
-
-
-        if (Input.GetKey(KeyCode.P) && myBall.itemcount == myBall.maxitemcount)
-        {
-            myBall.itemcount = 0;
-            uiManager.TriggerFever();
-            StartCoroutine(FevertDelay());
-        }
-
-        if (Input.GetKey(KeyCode.A) && !leftwall)
-        {
-            Vector3 hmd_left = -hmd_transform.right;
-            hmd_left.y = 0f;
-            transform.position += hmd_left * speed * Time.deltaTime;
-        }
-        else if (Input.GetKey(KeyCode.D) && !rightwall)
-        {
-            Vector3 hmd_right = hmd_transform.right;
-            hmd_right.y = 0f;
-            transform.position += hmd_right * speed * Time.deltaTime;
-        }
-
         if (myBall.finishline)
         {
             if (speed > 0)
@@ -147,43 +92,50 @@ public class InputManager : MonoBehaviour
                 if (speed > 0) speed = 0;
             }
         }
-        else if (Input.GetKey(KeyCode.W))
+        else if (cur_action == "walk" || Input.GetKey(KeyCode.W))
         {
             if (!Fevertime)
+            {
                 if (speed > maxForwardSpeed) speed -= deceleration * Time.deltaTime;
                 else speed += acceleration * Time.deltaTime;
+            }
         }
-        else if (Input.GetKey(KeyCode.S))
+        else if (!Fevertime)
         {
-            if (speed < -maxForwardSpeed) speed += deceleration * Time.deltaTime;
-            else speed -= acceleration * Time.deltaTime;
-        }
-        else
-        {
-            if (speed > 0)
+            if (speed > 1)
             {
                 speed -= deceleration * Time.deltaTime;
-                if (speed < 0) speed = 0;
+                if (speed < 1) speed = 1;
             }
-            else if (speed < 0)
-            {
-                speed += deceleration * Time.deltaTime;
-                if (speed > 0) speed = 0;
-            }
-        }
-        if (Input.GetKey(KeyCode.E))
-        {
-            transform.Rotate(Vector3.up, 100 * Time.deltaTime);
         }
 
-        if (Input.GetKey(KeyCode.Q))
+        if (cur_action == "lunge" || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
         {
-            transform.Rotate(Vector3.up, -100 * Time.deltaTime);
+            if ((lunge_direction == "left" || Input.GetKey(KeyCode.A)) && !leftwall)
+            {
+                //left lunge action
+                Vector3 hmd_left = -hmd_transform.right;
+                hmd_left.y = 0f;
+                transform.position += hmd_left * maxForwardSpeed * Time.deltaTime;
+            }
+            else if (Input.GetKey(KeyCode.D) && !rightwall)
+            {
+                //right lunge action
+                Vector3 hmd_right = hmd_transform.right;
+                hmd_right.y = 0f;
+                transform.position += hmd_right * maxForwardSpeed * Time.deltaTime;
+            }
         }
+
+        if (Input.GetKey(KeyCode.P) && myBall.itemcount == myBall.maxitemcount)
+        {
+            myBall.itemcount = 0;
+            uiManager.TriggerFever();
+            StartCoroutine(FevertDelay());
+        }
+
         Vector3 forwardDirection = transform.forward;
         forwardDirection.y = 0f;
-        if (leftwall && forwardDirection.x < 0) forwardDirection.x = 0f;
-        if (rightwall && forwardDirection.x > 0) forwardDirection.x = 0f;
         transform.position += forwardDirection * speed * Time.deltaTime;
 
     }
