@@ -59,7 +59,7 @@ public class ObstacleSpawner : MonoBehaviour
 
             Vector3 spawnPosition = roadBlock.position + new Vector3(laneX, 0, spawnZ);
 
-            if (Random.value > 0.7f)
+            if (Random.value > 0.8f)
             {
                 GameObject spawnedObstacle = Instantiate(selectedObstacle, spawnPosition, Quaternion.identity);
                 spawnedObstacle.tag = "obstacle"; 
