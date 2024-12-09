@@ -92,16 +92,23 @@ public class GameManager : MonoBehaviour
             return;
         }
         // save as JSON file
-        string directoryPath = Path.Combine(Application.persistentDataPath, $"Resources/Score/{fileName}.json");
-        string filePath = Path.Combine(directoryPath, $"{fileName}.json");
+        //string directoryPath = Path.Combine(Application.persistentDataPath, $"Resources/Score/{fileName}.json");
+        //string filePath = Path.Combine(directoryPath, $"{fileName}.json");
+        //string directoryPath = Path.Combine(Application.persistentDataPath, "ScoreData/Score");
+        //string filePath = Path.Combine(directoryPath, $"{fileName}.json");
         // load json file
-        // TextAsset jsonFile = Resources.Load<TextAsset>($"Score/{fileName}");
+        TextAsset jsonFile = Resources.Load<TextAsset>($"Score/{fileName}");
         BestScoreData scoreData = new BestScoreData();
-        if (File.Exists(filePath))
+        //if (File.Exists(filePath))
+        //{
+        //    string jsonData = File.ReadAllText(filePath); // JSON 파일 읽기
+        //    scoreData = JsonUtility.FromJson<BestScoreData>(jsonData);
+        //}
+        if (jsonFile != null)
         {
-            string jsonData = File.ReadAllText(filePath); // JSON 파일 읽기
-            scoreData = JsonUtility.FromJson<BestScoreData>(jsonData);
+            scoreData = JsonUtility.FromJson<BestScoreData>(jsonFile.text);
         }
+
         // 디렉토리가 없는 경우 생성
         if (!Directory.Exists(directoryPath))
         {
@@ -122,10 +129,18 @@ public class GameManager : MonoBehaviour
             scoreList.Add(new ScoreEntry { Player = playerName, Score = miniGameScore });
             scoreData.GRLightBestScore = scoreList.ToArray();
         }
-        string updatedJsonData = JsonUtility.ToJson(scoreData, true);
-        File.WriteAllText(filePath, updatedJsonData);
+        //string updatedJsonData = JsonUtility.ToJson(scoreData, true);
+        //File.WriteAllText(filePath, updatedJsonData);
+        string filePath = Path.Combine(Application.dataPath, $"Resources/Score/{fileName}.json");
+        string jsonData = JsonUtility.ToJson(scoreData, true);
+        File.WriteAllText(filePath, jsonData);
+        // Refresh 
+        #if UNITY_EDITOR
+        UnityEditor.AssetDatabase.Refresh();
+        #endif
 
         Debug.Log($"Score saved for {playerName} in {fileName}.json.");
+        
     }
     public void StopLobbyMusic()
     {
