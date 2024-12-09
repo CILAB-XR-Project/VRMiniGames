@@ -127,7 +127,7 @@ public class InputManager : MonoBehaviour
             }
         }
 
-        if (Input.GetKey(KeyCode.P) && myBall.itemcount == myBall.maxitemcount)
+        if ((Input.GetKey(KeyCode.P) || OVRInput.GetDown(OVRInput.Button.One)) && myBall.itemcount == myBall.maxitemcount)
         {
             myBall.itemcount = 0;
             uiManager.TriggerFever();
