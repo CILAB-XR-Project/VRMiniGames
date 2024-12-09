@@ -130,7 +130,7 @@ public class MyBall : MonoBehaviour
     {
         if (audioSource != null && clip != null)
         {
-            audioSource.PlayOneShot(clip); // ������ ����� Ŭ�� ���
+            audioSource.PlayOneShot(clip); 
         }
     }
 }
