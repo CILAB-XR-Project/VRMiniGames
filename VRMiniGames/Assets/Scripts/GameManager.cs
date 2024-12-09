@@ -105,13 +105,6 @@ public class GameManager : MonoBehaviour
             scoreData = JsonUtility.FromJson<BestScoreData>(jsonFile.text);
         }
 
-        // ���丮�� ���� ��� ����
-        if (!Directory.Exists(directoryPath))
-        {
-            Directory.CreateDirectory(directoryPath);
-        }
-        
-
         // save new score data
         if (isObstacle)
         {   // Obstacle Run
@@ -137,13 +130,6 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"Score saved for {playerName} in {fileName}.json.");
         
-    }
-    public void StopLobbyMusic()
-    {
-        if (audio_lobby != null && audio_lobby.isPlaying)
-        {
-            audio_lobby.Stop();
-        }
     }
     public void StopLobbyMusic()
     {
