@@ -1,29 +1,24 @@
 {
-    "ObstBestScore": [
-        {
-            "Player": "Bill",
-            "Score": 12.40999984741211
-        },
-        {
-            "Player": "Bob",
-            "Score": 15.510000228881836
-        },
-        {
-            "Player": "Dapper",
-            "Score": 70.66999816894531
-        },
-        {
-            "Player": "Dapper",
-            "Score": 78.9000015258789
-        },
-        {
-            "Player": "Player1",
-            "Score": 43.291770935058597
-        },
-        {
-            "Player": "Player1",
-            "Score": 37.87178039550781
-        }
-    ],
-    "GRLightBestScore": []
+  "ObstBestScore": [
+    {
+      "Player": "Bill",
+      "Score": 12.41
+    },
+    {
+      "Player": "Bob",
+      "Score": 15.51
+    },
+    {
+      "Player": "Dapper",
+      "Score": 70.67
+    },
+    {
+      "Player": "Dapper",
+      "Score": 78.90
+    },
+    {
+      "Player": "Player1",
+      "Score": 44.40
+    }
+  ]
 }
