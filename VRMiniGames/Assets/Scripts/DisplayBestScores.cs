@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
 using System.Linq;
+using System.Collections.Generic;
+using System.IO;
 public class DisplayBestScores : MonoBehaviour
 {
     private TMP_Text[] playerTexts;
@@ -50,13 +52,19 @@ public class DisplayBestScores : MonoBehaviour
     {
         // JSON file load and processing
         TextAsset jsonFile = Resources.Load<TextAsset>($"Score/{fileName}");
-        if (jsonFile == null)
+        //string filePath = Path.Combine(Application.dataPath, "ScoreData","Score", $"{fileName}.json");
+        //string filePath  = $"{Application.persistentDataPath}/A/Score/{fileName}.json";
+
+        //if (!File.Exists(jsonFile))
+        if (jsonFile == null )
         {
-            Debug.LogError($"Can't not find  JSON file: {fileName}!");
+            Debug.LogError($"Can't not find  JSON file: {jsonFile}!");
             return;
         }
+        //string jsonData = File.ReadAllText(filePath);
+        string jsonData = jsonFile.text;
 
-        BestScoreData scoreData = JsonUtility.FromJson<BestScoreData>(jsonFile.text);
+        BestScoreData scoreData = JsonUtility.FromJson<BestScoreData>(jsonData);
         if (scoreData == null)
         {
             Debug.LogError($"JSON data cannot be converted. file name : {fileName}");

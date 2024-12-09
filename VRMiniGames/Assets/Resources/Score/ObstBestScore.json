@@ -1,81 +1,24 @@
 {
-    "ObstBestScore": [
-        {
-            "Player": "Bill",
-            "Score": 12.40999984741211
-        },
-        {
-            "Player": "Bob",
-            "Score": 15.510000228881836
-        },
-        {
-            "Player": "Dapper",
-            "Score": 70.66999816894531
-        },
-        {
-            "Player": "Dapper",
-            "Score": 78.9000015258789
-        },
-        {
-            "Player": "Player1",
-            "Score": 38.11375427246094
-        },
-        {
-            "Player": "Player1",
-            "Score": 38.349308013916019
-        },
-        {
-            "Player": "Player1",
-            "Score": 38.988033294677737
-        },
-        {
-            "Player": "Player1",
-            "Score": 43.22063446044922
-        },
-        {
-            "Player": "Player1",
-            "Score": 31.45803451538086
-        },
-        {
-            "Player": "Player1",
-            "Score": 29.13951301574707
-        },
-        {
-            "Player": "Player1",
-            "Score": 61.85643005371094
-        },
-        {
-            "Player": "Player1",
-            "Score": 52.0965576171875
-        },
-        {
-            "Player": "Player1",
-            "Score": 42.39769744873047
-        },
-        {
-            "Player": "Player1",
-            "Score": 46.01577377319336
-        },
-        {
-            "Player": "Player1",
-            "Score": 48.45762634277344
-        },
-        {
-            "Player": "Player1",
-            "Score": 48.15734100341797
-        },
-        {
-            "Player": "Player1",
-            "Score": 53.87169647216797
-        },
-        {
-            "Player": "Player1",
-            "Score": 46.59851837158203
-        },
-        {
-            "Player": "Player1",
-            "Score": 55.47916793823242
-        }
-    ],
-    "GRLightBestScore": []
+  "ObstBestScore": [
+    {
+      "Player": "Bill",
+      "Score": 12.41
+    },
+    {
+      "Player": "Bob",
+      "Score": 15.51
+    },
+    {
+      "Player": "Dapper",
+      "Score": 70.67
+    },
+    {
+      "Player": "Dapper",
+      "Score": 78.90
+    },
+    {
+      "Player": "Player1",
+      "Score": 44.40
+    }
+  ]
 }

@@ -33,12 +33,21 @@ public class GameSave : MonoBehaviour
 
         // load json file
         TextAsset jsonFile = Resources.Load<TextAsset>($"Score/{fileName}");
+        ////string directoryPath = Path.Combine(Application.persistentDataPath, $"ScoreData/Score/{fileName}.json");
+        ////string filePath = Path.Combine(directoryPath, $"{fileName}.json");
+        //string directoryPath = Path.Combine(Application.persistentDataPath, "ScoreData/Score");
+        //string filePath = Path.Combine(directoryPath, $"{fileName}.json");
         BestScoreData scoreData = new BestScoreData();
 
         if (jsonFile != null)
         {
             scoreData = JsonUtility.FromJson<BestScoreData>(jsonFile.text);
         }
+        //if (File.Exists(filePath))
+        //{
+        //    string jsonData = File.ReadAllText(filePath); // JSON 파일 읽기
+        //    scoreData = JsonUtility.FromJson<BestScoreData>(jsonData);
+        //}
 
         // save new score data
         if (isObstacle)
@@ -57,8 +66,13 @@ public class GameSave : MonoBehaviour
         string filePath = Path.Combine(Application.dataPath, $"Resources/Score/{fileName}.json");
         string jsonData = JsonUtility.ToJson(scoreData, true);
         File.WriteAllText(filePath, jsonData);
+        // Refresh 
+        #if UNITY_EDITOR
+        UnityEditor.AssetDatabase.Refresh();
+        #endif
 
         Debug.Log($"Score saved for {playerName} in {fileName}.json.");
+        
     }
 
 }
