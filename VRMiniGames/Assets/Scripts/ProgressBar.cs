@@ -64,6 +64,7 @@ public class ProgressBar : MonoBehaviour
         for (int i = 0; i < _rulebotHandles.Count; i++)
         {
             UpdateHandlePosition(_rulebotHandles[i], _rulebotsProgress[i]);
+            
         }
 
         if (_player.position.z > _goal.position.z)
@@ -78,6 +79,27 @@ public class ProgressBar : MonoBehaviour
                 saveScore();
                 isgoal = true;
                 StartCoroutine(GoToLobbyAfterDelay(3f));
+            }
+        }
+        
+        foreach (Transform _rulebot in _rulebots.ToArray())
+        {
+            if (_rulebot.position.z <= _goal.position.z)
+            {
+                _rulebot.gameObject.SetActive(false);
+                
+                int index = _rulebots.IndexOf(_rulebot);
+
+                if (index >= 0)
+                {
+                    _rulebots.RemoveAt(index);
+                    Destroy(_rulebotHandles[index].gameObject);
+                    _rulebotHandles.RemoveAt(index);
+                    
+                    List<float> tempProgress = new List<float>(_rulebotsProgress);
+                    tempProgress.RemoveAt(index);
+                    _rulebotsProgress = tempProgress.ToArray();
+                }
             }
         }
     }
