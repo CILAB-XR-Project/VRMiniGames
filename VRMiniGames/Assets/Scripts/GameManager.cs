@@ -10,11 +10,11 @@ public class GameManager : MonoBehaviour
 
     //public string playerName;   // Player name
     [SerializeField] private string playerName = "Player1"; // Default value: "Player1"
-    public float miniGameScore; // ÇÃ·¹ÀÌ¾î Á¡¼ö
+    public float miniGameScore; // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     // text ui for display
-    [SerializeField] private TMP_Text[] obstPlayerTexts; // ObstBestScoreÀÇ Player1~Player8
-    [SerializeField] private TMP_Text[] obstScoreTexts;  // ObstBestScoreÀÇ Score1~Score8
+    [SerializeField] private TMP_Text[] obstPlayerTexts; // ObstBestScoreï¿½ï¿½ Player1~Player8
+    [SerializeField] private TMP_Text[] obstScoreTexts;  // ObstBestScoreï¿½ï¿½ Score1~Score8
                                                           
     // Externally accessible through read-only properties
     public TMP_Text[] ObstPlayerTexts => obstPlayerTexts;
@@ -79,12 +79,12 @@ public class GameManager : MonoBehaviour
         // Save In ObstBestScore
         GameManager.Instance.playerName = "Alice"; // 
         GameManager.Instance.miniGameScore = 45.2f;
-        GameManager.Instance.SaveScore("ObstBestScore", true); // ObstBestScore¿¡ ÀúÀå
+        GameManager.Instance.SaveScore("ObstBestScore", true); // ObstBestScoreï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
         // Save In  GRLightBestScore
         GameManager.Instance.playerName = "Bob";
         GameManager.Instance.miniGameScore = 78.9f;
-        GameManager.Instance.SaveScore("GRLightBestScore", false); // GRLightBestScore¿¡ ÀúÀå
+        GameManager.Instance.SaveScore("GRLightBestScore", false); // GRLightBestScoreï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
          */
         if (miniGameScore <= 0)
         {
@@ -92,17 +92,20 @@ public class GameManager : MonoBehaviour
             return;
         }
         // save as JSON file
-        string directoryPath = Path.Combine(Application.persistentDataPath, $"Resources/Score/{fileName}.json");
-        string filePath = Path.Combine(directoryPath, $"{fileName}.json");
         // load json file
-        // TextAsset jsonFile = Resources.Load<TextAsset>($"Score/{fileName}");
+        TextAsset jsonFile = Resources.Load<TextAsset>($"Score/{fileName}");
         BestScoreData scoreData = new BestScoreData();
-        if (File.Exists(filePath))
+        //if (File.Exists(filePath))
+        //{
+        //    string jsonData = File.ReadAllText(filePath); // JSON ï¿½ï¿½ï¿½ï¿½ ï¿½Ð±ï¿½
+        //    scoreData = JsonUtility.FromJson<BestScoreData>(jsonData);
+        //}
+        if (jsonFile != null)
         {
-            string jsonData = File.ReadAllText(filePath); // JSON ÆÄÀÏ ÀÐ±â
-            scoreData = JsonUtility.FromJson<BestScoreData>(jsonData);
+            scoreData = JsonUtility.FromJson<BestScoreData>(jsonFile.text);
         }
-        // µð·ºÅä¸®°¡ ¾ø´Â °æ¿ì »ý¼º
+
+        // ï¿½ï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (!Directory.Exists(directoryPath))
         {
             Directory.CreateDirectory(directoryPath);
@@ -122,10 +125,25 @@ public class GameManager : MonoBehaviour
             scoreList.Add(new ScoreEntry { Player = playerName, Score = miniGameScore });
             scoreData.GRLightBestScore = scoreList.ToArray();
         }
-        string updatedJsonData = JsonUtility.ToJson(scoreData, true);
-        File.WriteAllText(filePath, updatedJsonData);
+        //string updatedJsonData = JsonUtility.ToJson(scoreData, true);
+        //File.WriteAllText(filePath, updatedJsonData);
+        string filePath = Path.Combine(Application.dataPath, $"Resources/Score/{fileName}.json");
+        string jsonData = JsonUtility.ToJson(scoreData, true);
+        File.WriteAllText(filePath, jsonData);
+        // Refresh 
+        #if UNITY_EDITOR
+        UnityEditor.AssetDatabase.Refresh();
+        #endif
 
         Debug.Log($"Score saved for {playerName} in {fileName}.json.");
+        
+    }
+    public void StopLobbyMusic()
+    {
+        if (audio_lobby != null && audio_lobby.isPlaying)
+        {
+            audio_lobby.Stop();
+        }
     }
     public void StopLobbyMusic()
     {
