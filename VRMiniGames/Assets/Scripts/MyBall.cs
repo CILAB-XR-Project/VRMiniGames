@@ -76,11 +76,6 @@ public class MyBall : MonoBehaviour
         else if (other.tag == "Finish")
         {
             StartCoroutine(WaitAndExecute());
-            float last_time = UIManager.GetGameTime();
-            print(last_time);
-
-            gamesave.miniGameScore = last_time;
-            gamesave.SaveScore("ObstBestScore", true); // ObstBestScore에 저장
         }
         else if (other.tag == "leftwall")
         {
@@ -117,7 +112,7 @@ public class MyBall : MonoBehaviour
         UIManager.EndFeverUI();
         UIManager.EndGameTimer();
         float last_time = UIManager.GetGameTime();
-
+        Debug.Log(last_time);
         GameManager.Instance.miniGameScore = last_time;
         GameManager.Instance.SaveScore("ObstBestScore", true); // GRLightBestScore에 저장
         yield return new WaitForSeconds(finishDelay);
